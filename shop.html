@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Shop Morrow's considered collection of premium home, apparel, wellness, and travel essentials, with search, filters, and thoughtful details.">
+    <meta name="theme-color" content="#f4f0e8">
+    <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
+    <title>Shop the Collection | Morrow</title>
+    <link rel="stylesheet" href="./css/tokens.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/reset.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/base.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/layout.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/components.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/utilities.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/responsive.css?v=20260825-2">
+  </head>
+  <body data-page="shop">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <div class="announcement-bar" aria-label="Store announcement">
+      <p>Complimentary standard delivery on orders over $150 · Easy returns within 30 days</p>
+    </div>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <button class="icon-button mobile-menu-button" id="mobile-menu-toggle" type="button" aria-controls="mobile-nav" aria-expanded="false" aria-haspopup="dialog"><span class="sr-only">Open navigation</span><span aria-hidden="true">Menu</span></button>
+        <a class="brand" href="./index.html" aria-label="Morrow home"><span class="brand__name">Morrow</span><span class="brand__tagline">Objects for living</span></a>
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./shop.html" aria-current="page">Shop</a></li>
+            <li><a href="./shop.html?sort=newest">New arrivals</a></li>
+            <li><a href="./shop.html?category=home">Living</a></li>
+            <li><a href="./index.html#journal">Journal</a></li>
+          </ul>
+        </nav>
+        <form class="global-search" id="global-search-form" role="search" action="./shop.html" method="get" autocomplete="off">
+          <label class="sr-only" for="global-search-input">Search Morrow products</label>
+          <input id="global-search-input" name="q" type="search" placeholder="Search Morrow" enterkeyhint="search">
+          <button class="global-search__submit" type="submit">Search</button>
+          <div class="search-suggestions" id="search-suggestions" role="region" aria-label="Product suggestions" hidden></div>
+        </form>
+        <nav class="utility-nav" aria-label="Shopping tools">
+          <a href="./wishlist.html" aria-label="Wishlist, 0 items"><span aria-hidden="true">Wishlist</span><span class="count-badge" data-wishlist-count aria-hidden="true">0</span></a>
+          <a href="./cart.html" data-cart-trigger data-open-cart aria-controls="cart-drawer" aria-expanded="false" aria-label="Shopping bag, 0 items"><span aria-hidden="true">Bag</span><span class="count-badge" data-cart-count aria-hidden="true">0</span></a>
+        </nav>
+      </div>
+      <nav class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden>
+        <button class="icon-button mobile-nav__close" id="mobile-menu-close" type="button" aria-label="Close navigation">Close</button>
+        <ul class="container">
+          <li><a href="./index.html">Home</a></li><li><a href="./shop.html" aria-current="page">Shop all</a></li><li><a href="./shop.html?sort=newest">New arrivals</a></li><li><a href="./shop.html?category=home">Living</a></li><li><a href="./index.html#journal">Journal</a></li><li><a href="./wishlist.html">Wishlist</a></li><li><a href="./cart.html">Shopping bag</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <ol><li><a href="./index.html">Home</a></li><li aria-current="page">Shop</li></ol>
+        </nav>
+      </div>
+
+      <header class="page-hero page-hero--shop">
+        <div class="container">
+          <p class="eyebrow">The complete collection</p>
+          <h1>Shop Morrow</h1>
+          <p>Considered objects and easy essentials, selected for the way they feel, function, and last.</p>
+        </div>
+      </header>
+
+      <section class="shop-section" aria-labelledby="shop-results-heading">
+        <div class="container">
+          <div class="shop-toolbar">
+            <form class="shop-search" role="search" id="shop-search-form" action="./shop.html" method="get">
+              <label for="shop-search">Search this collection</label>
+              <div class="input-with-action">
+                <input id="shop-search" name="q" type="search" placeholder="Product, brand, or category" enterkeyhint="search">
+                <button type="submit">Search</button>
+              </div>
+            </form>
+
+            <div class="shop-toolbar__actions">
+              <button class="button btn button--secondary btn--secondary filter-drawer-button" id="filter-drawer-toggle" type="button" aria-controls="filter-panel" aria-expanded="false">Filters <span class="count-badge" data-filter-count hidden>0</span></button>
+              <div class="select-field">
+                <label for="sort-select">Sort by</label>
+                <select id="sort-select" name="sort">
+                  <option value="featured">Featured</option>
+                  <option value="newest">Newest</option>
+                  <option value="price-asc">Price: low to high</option>
+                  <option value="price-desc">Price: high to low</option>
+                  <option value="rating">Highest rated</option>
+                  <option value="popularity">Most popular</option>
+                  <option value="name">Name</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="active-filter-bar">
+            <div id="active-filters" class="filter-chips" aria-live="polite" aria-label="Active filters">
+              <p class="muted">No filters applied.</p>
+            </div>
+          </div>
+
+          <div class="shop-layout">
+            <div class="filter-backdrop" id="filter-backdrop" hidden></div>
+            <aside class="filter-panel" id="filter-panel" aria-labelledby="filter-title">
+              <header class="filter-panel__header">
+                <h2 id="filter-title">Refine your view</h2>
+                <button class="icon-button filter-panel__close" id="filter-close" type="button"><span aria-hidden="true">Close</span><span class="sr-only">Close filters</span></button>
+              </header>
+
+              <form id="filter-form">
+                <fieldset>
+                  <legend>Category</legend>
+                  <div class="filter-options" id="category-filters" aria-live="polite">
+                    <p class="loading-state" role="status">Loading categories…</p>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>Brand</legend>
+                  <div class="filter-options" id="brand-filters" aria-live="polite">
+                    <p class="loading-state" role="status">Loading brands…</p>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>Availability</legend>
+                  <div class="filter-options" id="availability-filters">
+                    <label><input type="radio" name="availability" value="all" checked> All products</label>
+                    <label><input type="radio" name="availability" value="in-stock"> In stock</label>
+                    <label><input type="radio" name="availability" value="out-of-stock"> Out of stock</label>
+                  </div>
+                </fieldset>
+
+                <fieldset>
+                  <legend>Price range</legend>
+                  <div class="price-range">
+                    <label for="min-price">Minimum price <span class="currency-prefix">$</span><input id="min-price" name="minPrice" type="number" min="0" step="1" inputmode="decimal" placeholder="0"></label>
+                    <label for="max-price">Maximum price <span class="currency-prefix">$</span><input id="max-price" name="maxPrice" type="number" min="0" step="1" inputmode="decimal" placeholder="500"></label>
+                  </div>
+                </fieldset>
+
+                <div class="filter-panel__actions">
+                  <button class="button btn button--primary btn--primary" type="submit">Apply filters</button>
+                  <button class="button btn button--text btn--text" id="clear-filters" type="reset">Clear all</button>
+                </div>
+              </form>
+            </aside>
+
+            <div class="shop-results">
+              <div class="shop-results__heading">
+                <h2 id="shop-results-heading">The collection</h2>
+                <p id="product-count" role="status">Loading products…</p>
+              </div>
+              <div class="product-grid" id="product-grid" aria-labelledby="shop-results-heading" aria-busy="true">
+                <p class="loading-state" role="status">Gathering the collection…</p>
+              </div>
+              <div class="load-more">
+                <button class="button btn button--secondary btn--secondary" id="load-more" type="button" hidden>Load more products</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="cart-drawer drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title" tabindex="-1" hidden>
+      <div class="drawer-backdrop drawer__backdrop" id="cart-drawer-backdrop" aria-hidden="true" hidden></div>
+      <div class="drawer__panel"><header class="cart-drawer__header drawer__header"><div><p class="eyebrow">Your selection</p><h2 class="drawer__title" id="cart-drawer-title">Shopping bag</h2></div><button class="icon-button icon-btn" id="cart-drawer-close" type="button" aria-label="Close shopping bag"><span aria-hidden="true">Close</span></button></header><div class="cart-drawer__content drawer__body" id="cart-drawer-content"><p class="loading-state" role="status">Loading your bag…</p></div></div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container site-footer__grid">
+        <div class="site-footer__brand"><a class="brand brand--footer" href="./index.html" aria-label="Morrow home"><span class="brand__name">Morrow</span><span class="brand__tagline">Objects for living</span></a><p>Considered goods for home, work, travel, and the spaces in between.</p></div>
+        <nav aria-labelledby="footer-shop-title"><h2 id="footer-shop-title">Shop</h2><ul><li><a href="./shop.html">All products</a></li><li><a href="./shop.html?sort=newest">New arrivals</a></li><li><a href="./shop.html?category=home">Living</a></li><li><a href="./shop.html?category=accessories">Accessories</a></li></ul></nav>
+        <nav aria-labelledby="footer-morrow-title"><h2 id="footer-morrow-title">Morrow</h2><ul><li><a href="./index.html#our-standards">Our standards</a></li><li><a href="./index.html#journal">Journal</a></li><li><a href="./wishlist.html">Wishlist</a></li><li><a href="mailto:hello@morrow.example">Contact</a></li></ul></nav>
+        <section class="newsletter" id="newsletter" aria-labelledby="newsletter-title"><h2 id="newsletter-title">Notes from Morrow</h2><p id="newsletter-note">A considered letter about new objects, makers, and everyday rituals.</p><form class="newsletter__form" action="./index.html" method="get" data-newsletter-form><label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="Email address" aria-describedby="newsletter-note" required><button type="submit">Subscribe</button></form></section>
+      </div>
+      <div class="container site-footer__legal"><p>&copy; 2026 Morrow. A demonstration storefront.</p><p>Payments and orders on this site are simulated.</p></div>
+    </footer>
+
+    <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true" data-modal-exempt></div>
+    <div class="toast-region" id="toast-region"></div>
+    <script type="module" src="./js/app.js?v=20260825-2"></script>
+    <script type="module" src="./js/pages/shop.js?v=20260825-2"></script>
+  </body>
+</html>

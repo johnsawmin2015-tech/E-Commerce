@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Morrow product image placeholder</title>
+  <desc id="desc">A warm neutral abstract still life</desc>
+  <rect width="800" height="1000" fill="#eeeae3"/>
+  <circle cx="250" cy="420" r="180" fill="#d8d1c7"/>
+  <rect x="370" y="270" width="240" height="420" rx="120" fill="#b6a896"/>
+  <path d="M0 760c180-100 360-100 540 0s260 60 260 60v180H0z" fill="#d0c3b2"/>
+  <text x="400" y="910" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" letter-spacing="8" fill="#2d2b28">MORROW</text>
+</svg>

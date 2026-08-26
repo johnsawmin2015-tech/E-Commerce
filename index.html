@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Discover considered home, wardrobe, travel, and everyday essentials at Morrow, a modern lifestyle store built around lasting design.">
+    <meta name="theme-color" content="#f4f0e8">
+    <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
+    <title>Morrow | Considered Objects for Everyday Living</title>
+    <link rel="stylesheet" href="./css/tokens.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/reset.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/base.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/layout.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/components.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/utilities.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/responsive.css?v=20260825-2">
+  </head>
+  <body data-page="home">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <div class="announcement-bar" aria-label="Store announcement">
+      <p>Complimentary standard delivery on orders over $150 · Easy returns within 30 days</p>
+    </div>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <button class="icon-button mobile-menu-button" id="mobile-menu-toggle" type="button" aria-controls="mobile-nav" aria-expanded="false" aria-haspopup="dialog">
+          <span class="sr-only">Open navigation</span>
+          <span aria-hidden="true">Menu</span>
+        </button>
+
+        <a class="brand" href="./index.html" aria-label="Morrow home">
+          <span class="brand__name">Morrow</span>
+          <span class="brand__tagline">Objects for living</span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <ul>
+            <li><a href="./index.html" aria-current="page">Home</a></li>
+            <li><a href="./shop.html">Shop</a></li>
+            <li><a href="./shop.html?sort=newest">New arrivals</a></li>
+            <li><a href="./shop.html?category=home">Living</a></li>
+            <li><a href="./index.html#journal">Journal</a></li>
+          </ul>
+        </nav>
+
+        <form class="global-search" id="global-search-form" role="search" action="./shop.html" method="get" autocomplete="off">
+          <label class="sr-only" for="global-search-input">Search Morrow products</label>
+          <input id="global-search-input" name="q" type="search" placeholder="Search Morrow" enterkeyhint="search">
+          <button class="global-search__submit" type="submit">Search</button>
+          <div class="search-suggestions" id="search-suggestions" role="region" aria-label="Product suggestions" hidden></div>
+        </form>
+
+        <nav class="utility-nav" aria-label="Shopping tools">
+          <a href="./wishlist.html" aria-label="Wishlist, 0 items">
+            <span aria-hidden="true">Wishlist</span>
+            <span class="count-badge" data-wishlist-count aria-hidden="true">0</span>
+          </a>
+          <a href="./cart.html" data-cart-trigger data-open-cart aria-controls="cart-drawer" aria-expanded="false" aria-label="Shopping bag, 0 items">
+            <span aria-hidden="true">Bag</span>
+            <span class="count-badge" data-cart-count aria-hidden="true">0</span>
+          </a>
+        </nav>
+      </div>
+
+      <nav class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden>
+        <button class="icon-button mobile-nav__close" id="mobile-menu-close" type="button" aria-label="Close navigation">Close</button>
+        <ul class="container">
+          <li><a href="./index.html" aria-current="page">Home</a></li>
+          <li><a href="./shop.html">Shop all</a></li>
+          <li><a href="./shop.html?sort=newest">New arrivals</a></li>
+          <li><a href="./shop.html?category=home">Living</a></li>
+          <li><a href="./index.html#journal">Journal</a></li>
+          <li><a href="./wishlist.html">Wishlist</a></li>
+          <li><a href="./cart.html">Shopping bag</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero__layout">
+          <div class="hero__content">
+            <p class="eyebrow">The autumn edit · 2026</p>
+            <h1 id="hero-title">Objects for quieter, better days.</h1>
+            <p class="hero__lede">A considered collection of tactile essentials for home, work, and wherever the day takes you.</p>
+            <div class="button-group">
+              <a class="button btn button--primary btn--primary" href="./shop.html">Explore the collection</a>
+              <a class="button btn button--text btn--text" href="#featured">See our edit</a>
+            </div>
+          </div>
+          <figure class="hero__media">
+            <div class="hero__art" role="img" aria-label="A calm arrangement of modern Morrow home and travel objects"></div>
+            <figcaption>Form, function, and natural material in balance.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section category-showcase" aria-labelledby="categories-title">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Shop with intention</p>
+              <h2 id="categories-title">Made for the rhythms of your day</h2>
+            </div>
+            <a class="text-link" href="./shop.html">Shop all categories</a>
+          </div>
+          <div class="category-grid">
+            <article class="category-card category-card--large">
+              <a href="./shop.html?category=home">
+                <span class="category-card__visual category-card__visual--home" aria-hidden="true"></span>
+                <span class="category-card__content"><span class="eyebrow">01</span><h3>Calm at home</h3><span>Warm textures and useful forms</span></span>
+              </a>
+            </article>
+            <article class="category-card">
+              <a href="./shop.html?category=apparel">
+                <span class="category-card__visual category-card__visual--apparel" aria-hidden="true"></span>
+                <span class="category-card__content"><span class="eyebrow">02</span><h3>Everyday wear</h3><span>Easy layers, thoughtfully cut</span></span>
+              </a>
+            </article>
+            <article class="category-card">
+              <a href="./shop.html?category=accessories">
+                <span class="category-card__visual category-card__visual--accessories" aria-hidden="true"></span>
+                <span class="category-card__content"><span class="eyebrow">03</span><h3>Everyday carry</h3><span>Useful details, always within reach</span></span>
+              </a>
+            </article>
+            <article class="category-card">
+              <a href="./shop.html?category=footwear">
+                <span class="category-card__visual category-card__visual--footwear" aria-hidden="true"></span>
+                <span class="category-card__content"><span class="eyebrow">04</span><h3>Move with ease</h3><span>Grounded comfort for everyday miles</span></span>
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section" id="featured" aria-labelledby="featured-title">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">The Morrow selection</p>
+              <h2 id="featured-title">Featured pieces</h2>
+            </div>
+            <a class="text-link" href="./shop.html?sort=featured">View the full edit</a>
+          </div>
+          <div class="product-grid" id="featured-products" aria-busy="true">
+            <p class="loading-state" role="status">Curating featured pieces…</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="editorial-banner" aria-labelledby="editorial-banner-title">
+        <div class="container editorial-banner__layout">
+          <div class="editorial-banner__media" role="img" aria-label="Natural materials arranged in a serene living space"></div>
+          <div class="editorial-banner__content">
+            <p class="eyebrow">Material matters</p>
+            <h2 id="editorial-banner-title">Fewer things. Better chosen.</h2>
+            <p>We seek honest materials, restrained forms, and makers who care about how an object lives beyond its first season.</p>
+            <a class="button btn button--secondary btn--secondary" href="#our-standards">Read our standards</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section product-section" aria-labelledby="arrivals-title">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Just in</p>
+              <h2 id="arrivals-title">New arrivals</h2>
+            </div>
+            <a class="text-link" href="./shop.html?sort=newest">Shop what is new</a>
+          </div>
+          <div class="product-grid" id="new-arrivals" aria-busy="true">
+            <p class="loading-state" role="status">Unwrapping new arrivals…</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section values" id="our-standards" aria-labelledby="values-title">
+        <div class="container">
+          <div class="section-heading section-heading--center">
+            <div>
+              <p class="eyebrow">The Morrow standard</p>
+              <h2 id="values-title">Designed to stay in your life</h2>
+            </div>
+          </div>
+          <div class="value-grid">
+            <article>
+              <span class="value-card__number" aria-hidden="true">01</span>
+              <h3>Considered sourcing</h3>
+              <p>We prioritize traceable materials and partners committed to responsible, durable production.</p>
+            </article>
+            <article>
+              <span class="value-card__number" aria-hidden="true">02</span>
+              <h3>Useful by design</h3>
+              <p>Every detail earns its place, balancing daily function with a quiet, enduring point of view.</p>
+            </article>
+            <article>
+              <span class="value-card__number" aria-hidden="true">03</span>
+              <h3>Here when needed</h3>
+              <p>Thoughtful delivery, straightforward returns, and human support make shopping feel simple.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section journal" id="journal" aria-labelledby="journal-title">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Morrow notes</p>
+              <h2 id="journal-title">Ideas for living with less, better</h2>
+            </div>
+          </div>
+          <div class="journal-grid">
+            <article class="journal-card journal-card--featured">
+              <div class="journal-card__image journal-card__image--one" aria-hidden="true"></div>
+              <div class="journal-card__content"><p class="eyebrow">At home · 6 min</p><h3>The art of the useful shelf</h3><p>A practical approach to arranging the things you reach for every day.</p><a class="text-link" href="./shop.html?category=home">Explore the home edit</a></div>
+            </article>
+            <article class="journal-card">
+              <div class="journal-card__image journal-card__image--two" aria-hidden="true"></div>
+              <div class="journal-card__content"><p class="eyebrow">Field notes · 4 min</p><h3>Carry only what matters</h3><p>Versatile companions for an unhurried day out.</p><a class="text-link" href="./shop.html?category=accessories">Explore accessories</a></div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="cart-drawer drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title" tabindex="-1" hidden>
+      <div class="drawer-backdrop drawer__backdrop" id="cart-drawer-backdrop" aria-hidden="true" hidden></div>
+      <div class="drawer__panel">
+        <header class="cart-drawer__header drawer__header">
+          <div><p class="eyebrow">Your selection</p><h2 class="drawer__title" id="cart-drawer-title">Shopping bag</h2></div>
+          <button class="icon-button icon-btn" id="cart-drawer-close" type="button" aria-label="Close shopping bag"><span aria-hidden="true">Close</span></button>
+        </header>
+        <div class="cart-drawer__content drawer__body" id="cart-drawer-content">
+          <p class="loading-state" role="status">Loading your bag…</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container site-footer__grid">
+        <div class="site-footer__brand">
+          <a class="brand brand--footer" href="./index.html" aria-label="Morrow home"><span class="brand__name">Morrow</span><span class="brand__tagline">Objects for living</span></a>
+          <p>Considered goods for home, work, travel, and the spaces in between.</p>
+        </div>
+        <nav aria-labelledby="footer-shop-title">
+          <h2 id="footer-shop-title">Shop</h2>
+          <ul><li><a href="./shop.html">All products</a></li><li><a href="./shop.html?sort=newest">New arrivals</a></li><li><a href="./shop.html?category=home">Living</a></li><li><a href="./shop.html?category=accessories">Accessories</a></li></ul>
+        </nav>
+        <nav aria-labelledby="footer-morrow-title">
+          <h2 id="footer-morrow-title">Morrow</h2>
+          <ul><li><a href="./index.html#our-standards">Our standards</a></li><li><a href="./index.html#journal">Journal</a></li><li><a href="./wishlist.html">Wishlist</a></li><li><a href="mailto:hello@morrow.example">Contact</a></li></ul>
+        </nav>
+        <section class="newsletter" id="newsletter" aria-labelledby="newsletter-title">
+          <h2 id="newsletter-title">Notes from Morrow</h2>
+          <p id="newsletter-note">A considered letter about new objects, makers, and everyday rituals.</p>
+          <form class="newsletter__form" action="./index.html" method="get" data-newsletter-form>
+            <label class="sr-only" for="newsletter-email">Email address</label>
+            <input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="Email address" aria-describedby="newsletter-note" required>
+            <button type="submit">Subscribe</button>
+          </form>
+        </section>
+      </div>
+      <div class="container site-footer__legal">
+        <p>&copy; 2026 Morrow. A demonstration storefront.</p>
+        <p>Payments and orders on this site are simulated.</p>
+      </div>
+    </footer>
+
+    <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true" data-modal-exempt></div>
+    <div class="toast-region" id="toast-region"></div>
+
+    <script type="module" src="./js/app.js?v=20260825-2"></script>
+    <script type="module" src="./js/pages/home.js?v=20260825-2"></script>
+  </body>
+</html>

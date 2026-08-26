@@ -1,0 +1,222 @@
+/*
+ * Morrow design tokens
+ *
+ * The visual language is deliberately quiet: warm paper surfaces, charcoal ink,
+ * and a single clay accent. Components should consume semantic tokens from this
+ * file instead of introducing one-off values.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* Primitive palette */
+  --neutral-0: #ffffff;
+  --neutral-25: #fffdf9;
+  --neutral-50: #faf8f3;
+  --neutral-100: #f3efe7;
+  --neutral-150: #ebe5da;
+  --neutral-200: #ded6ca;
+  --neutral-300: #c9c0b3;
+  --neutral-400: #9d958a;
+  --neutral-500: #746e66;
+  --neutral-600: #5a554f;
+  --neutral-700: #403d39;
+  --neutral-800: #2b2926;
+  --neutral-900: #1c1b19;
+  --neutral-950: #121210;
+
+  --clay-50: #faf0eb;
+  --clay-100: #f4ded3;
+  --clay-200: #e6bfae;
+  --clay-400: #b76d4f;
+  --clay-500: #965039;
+  --clay-600: #7c402e;
+  --clay-700: #633326;
+
+  --green-50: #edf7f0;
+  --green-100: #d8eddf;
+  --green-600: #2e7048;
+  --green-700: #245a3a;
+
+  --amber-50: #fff7e3;
+  --amber-100: #f9e9bd;
+  --amber-700: #7c5812;
+
+  --red-50: #fdf0ef;
+  --red-100: #f8dcda;
+  --red-600: #b33b34;
+  --red-700: #922e29;
+
+  /* Semantic color roles */
+  --color-canvas: var(--neutral-50);
+  --color-canvas-subtle: var(--neutral-100);
+  --color-surface: var(--neutral-25);
+  --color-surface-raised: var(--neutral-0);
+  --color-surface-inverse: var(--neutral-900);
+  --color-surface-disabled: var(--neutral-150);
+  --color-backdrop: rgb(18 18 16 / 56%);
+
+  --color-text: var(--neutral-900);
+  --color-text-strong: var(--neutral-950);
+  --color-text-secondary: var(--neutral-600);
+  --color-text-muted: var(--neutral-500);
+  --color-text-inverse: var(--neutral-25);
+  --color-text-disabled: var(--neutral-400);
+
+  --color-border: var(--neutral-200);
+  --color-border-strong: var(--neutral-500);
+  --color-divider: rgb(43 41 38 / 13%);
+
+  --color-accent: var(--clay-600);
+  --color-accent-hover: var(--clay-700);
+  --color-accent-active: #542a20;
+  --color-accent-soft: var(--clay-50);
+  --color-accent-border: var(--clay-200);
+  --color-on-accent: var(--neutral-0);
+
+  --color-link: #694131;
+  --color-link-hover: var(--clay-700);
+  --color-focus: #155fa0;
+  --color-focus-ring: rgb(21 95 160 / 26%);
+
+  --color-success: var(--green-700);
+  --color-success-surface: var(--green-50);
+  --color-success-border: var(--green-100);
+  --color-warning: var(--amber-700);
+  --color-warning-surface: var(--amber-50);
+  --color-warning-border: var(--amber-100);
+  --color-danger: var(--red-700);
+  --color-danger-hover: #782520;
+  --color-danger-surface: var(--red-50);
+  --color-danger-border: var(--red-100);
+
+  /* Typography */
+  --font-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --font-size-2xs: 0.6875rem;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: clamp(1.45rem, 1.2rem + 0.8vw, 2rem);
+  --font-size-3xl: clamp(1.8rem, 1.35rem + 1.5vw, 2.75rem);
+  --font-size-4xl: clamp(2.25rem, 1.5rem + 2.8vw, 4rem);
+  --font-size-display: clamp(2.75rem, 1.65rem + 4.7vw, 6rem);
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.08;
+  --line-height-heading: 1.2;
+  --line-height-body: 1.6;
+  --line-height-ui: 1.35;
+
+  --tracking-tight: -0.03em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.12em;
+
+  /* Spacing: four-pixel base with larger editorial intervals */
+  --space-0: 0;
+  --space-0-5: 0.125rem;
+  --space-1: 0.25rem;
+  --space-1-5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2-5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-28: 7rem;
+  --space-32: 8rem;
+
+  /* Shape */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-pill: 999px;
+
+  /* Borders and elevation */
+  --border-width: 1px;
+  --border-width-strong: 2px;
+  --shadow-xs: 0 1px 2px rgb(28 27 25 / 7%);
+  --shadow-sm: 0 4px 14px rgb(28 27 25 / 8%);
+  --shadow-md: 0 14px 36px rgb(28 27 25 / 12%);
+  --shadow-lg: 0 28px 72px rgb(18 18 16 / 18%);
+  --focus-ring: 0 0 0 3px var(--color-focus-ring);
+
+  /* Motion */
+  --duration-instant: 80ms;
+  --duration-fast: 140ms;
+  --duration-normal: 220ms;
+  --duration-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Layout */
+  --container-narrow: 46rem;
+  --container-content: 72rem;
+  --container-wide: 90rem;
+  --container-gutter: clamp(1rem, 2.5vw, 2.5rem);
+  --section-space: clamp(3.5rem, 8vw, 7.5rem);
+  --grid-gap: clamp(1rem, 2.2vw, 2rem);
+
+  --announcement-height: 2rem;
+  --header-height: 4rem;
+  --control-height-sm: 2.5rem;
+  --control-height: 2.75rem;
+  --control-height-lg: 3.25rem;
+  --tap-target: 2.75rem;
+
+  /* Layers */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-dropdown: 300;
+  --z-overlay: 600;
+  --z-modal: 700;
+  --z-toast: 900;
+
+  /* Documented breakpoint references (media queries use literal values) */
+  --breakpoint-sm: 30rem;   /* 480px */
+  --breakpoint-md: 48rem;   /* 768px */
+  --breakpoint-lg: 64rem;   /* 1024px */
+  --breakpoint-xl: 80rem;   /* 1280px */
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --header-height: 4.5rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --header-height: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0.01ms;
+    --duration-fast: 0.01ms;
+    --duration-normal: 0.01ms;
+    --duration-slow: 0.01ms;
+  }
+}

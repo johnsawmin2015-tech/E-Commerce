@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Return to the Morrow pieces you have saved, compare your considered selection, and move favorites into your shopping bag.">
+    <meta name="theme-color" content="#f4f0e8">
+    <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
+    <title>Your Wishlist | Morrow</title>
+    <link rel="stylesheet" href="./css/tokens.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/reset.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/base.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/layout.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/components.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/utilities.css?v=20260825-2">
+    <link rel="stylesheet" href="./css/responsive.css?v=20260825-2">
+  </head>
+  <body data-page="wishlist">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <div class="announcement-bar" aria-label="Store announcement"><p>Complimentary standard delivery on orders over $150 · Easy returns within 30 days</p></div>
+
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <button class="icon-button mobile-menu-button" id="mobile-menu-toggle" type="button" aria-controls="mobile-nav" aria-expanded="false" aria-haspopup="dialog"><span class="sr-only">Open navigation</span><span aria-hidden="true">Menu</span></button>
+        <a class="brand" href="./index.html" aria-label="Morrow home"><span class="brand__name">Morrow</span><span class="brand__tagline">Objects for living</span></a>
+        <nav class="desktop-nav" aria-label="Primary navigation"><ul><li><a href="./index.html">Home</a></li><li><a href="./shop.html">Shop</a></li><li><a href="./shop.html?sort=newest">New arrivals</a></li><li><a href="./shop.html?category=home">Living</a></li><li><a href="./index.html#journal">Journal</a></li></ul></nav>
+        <form class="global-search" id="global-search-form" role="search" action="./shop.html" method="get" autocomplete="off">
+          <label class="sr-only" for="global-search-input">Search Morrow products</label><input id="global-search-input" name="q" type="search" placeholder="Search Morrow" enterkeyhint="search"><button class="global-search__submit" type="submit">Search</button><div class="search-suggestions" id="search-suggestions" role="region" aria-label="Product suggestions" hidden></div>
+        </form>
+        <nav class="utility-nav" aria-label="Shopping tools">
+          <a href="./wishlist.html" aria-current="page" aria-label="Wishlist, 0 items"><span aria-hidden="true">Wishlist</span><span class="count-badge" data-wishlist-count aria-hidden="true">0</span></a>
+          <a href="./cart.html" data-cart-trigger data-open-cart aria-controls="cart-drawer" aria-expanded="false" aria-label="Shopping bag, 0 items"><span aria-hidden="true">Bag</span><span class="count-badge" data-cart-count aria-hidden="true">0</span></a>
+        </nav>
+      </div>
+      <nav class="mobile-nav" id="mobile-nav" role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden><button class="icon-button mobile-nav__close" id="mobile-menu-close" type="button" aria-label="Close navigation">Close</button><ul class="container"><li><a href="./index.html">Home</a></li><li><a href="./shop.html">Shop all</a></li><li><a href="./shop.html?sort=newest">New arrivals</a></li><li><a href="./shop.html?category=home">Living</a></li><li><a href="./index.html#journal">Journal</a></li><li><a href="./wishlist.html" aria-current="page">Wishlist</a></li><li><a href="./cart.html">Shopping bag</a></li></ul></nav>
+    </header>
+
+    <main id="main-content">
+      <div class="container">
+        <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="./index.html">Home</a></li><li aria-current="page">Wishlist</li></ol></nav>
+      </div>
+
+      <section class="section wishlist-section" aria-labelledby="wishlist-title">
+        <div class="container">
+          <header class="page-heading">
+            <p class="eyebrow">Saved for later</p>
+            <h1 id="wishlist-title">Your wishlist</h1>
+            <p>Keep the pieces worth returning to, then move them to your bag when the time feels right.</p>
+          </header>
+
+          <div class="product-grid wishlist-grid" id="wishlist-page" aria-labelledby="wishlist-title" aria-busy="true">
+            <div class="loading-state" role="status"><span class="loading-state__visual" aria-hidden="true"></span><p>Gathering your saved pieces…</p></div>
+          </div>
+          <noscript><p class="notice notice--warning">Your saved wishlist requires JavaScript. Please enable it and reload this page to see your pieces.</p></noscript>
+        </div>
+      </section>
+
+      <section class="wishlist-note" aria-labelledby="wishlist-note-title">
+        <div class="container wishlist-note__inner">
+          <div><p class="eyebrow">A quieter way to choose</p><h2 id="wishlist-note-title">Take your time</h2></div>
+          <p>Your wishlist is stored only in this browser. No account is needed, and nothing is reserved until it reaches your bag.</p>
+          <a class="button btn button--secondary btn--secondary" href="./shop.html">Continue exploring</a>
+        </div>
+      </section>
+    </main>
+
+    <div class="cart-drawer drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title" tabindex="-1" hidden>
+      <div class="drawer-backdrop drawer__backdrop" id="cart-drawer-backdrop" aria-hidden="true" hidden></div>
+      <div class="drawer__panel"><header class="cart-drawer__header drawer__header"><div><p class="eyebrow">Your selection</p><h2 class="drawer__title" id="cart-drawer-title">Shopping bag</h2></div><button class="icon-button icon-btn" id="cart-drawer-close" type="button" aria-label="Close shopping bag"><span aria-hidden="true">Close</span></button></header><div class="cart-drawer__content drawer__body" id="cart-drawer-content"><p class="loading-state" role="status">Loading your bag…</p></div></div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container site-footer__grid">
+        <div class="site-footer__brand"><a class="brand brand--footer" href="./index.html" aria-label="Morrow home"><span class="brand__name">Morrow</span><span class="brand__tagline">Objects for living</span></a><p>Considered goods for home, work, travel, and the spaces in between.</p></div>
+        <nav aria-labelledby="footer-shop-title"><h2 id="footer-shop-title">Shop</h2><ul><li><a href="./shop.html">All products</a></li><li><a href="./shop.html?sort=newest">New arrivals</a></li><li><a href="./shop.html?category=home">Living</a></li><li><a href="./shop.html?category=accessories">Accessories</a></li></ul></nav>
+        <nav aria-labelledby="footer-morrow-title"><h2 id="footer-morrow-title">Morrow</h2><ul><li><a href="./index.html#our-standards">Our standards</a></li><li><a href="./index.html#journal">Journal</a></li><li><a href="./wishlist.html">Wishlist</a></li><li><a href="mailto:hello@morrow.example">Contact</a></li></ul></nav>
+        <section class="newsletter" id="newsletter" aria-labelledby="newsletter-title"><h2 id="newsletter-title">Notes from Morrow</h2><p id="newsletter-note">A considered letter about new objects, makers, and everyday rituals.</p><form class="newsletter__form" action="./index.html" method="get" data-newsletter-form><label class="sr-only" for="newsletter-email">Email address</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="Email address" aria-describedby="newsletter-note" required><button type="submit">Subscribe</button></form></section>
+      </div>
+      <div class="container site-footer__legal"><p>&copy; 2026 Morrow. A demonstration storefront.</p><p>Payments and orders on this site are simulated.</p></div>
+    </footer>
+
+    <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true" data-modal-exempt></div>
+    <div class="toast-region" id="toast-region"></div>
+    <script type="module" src="./js/app.js?v=20260825-2"></script>
+    <script type="module" src="./js/pages/wishlist-page.js?v=20260825-2"></script>
+  </body>
+</html>
