@@ -3,16 +3,16 @@ import {
   normalizeFilterState,
   readShopState,
   serializeShopState,
-} from "../filters.js?v=20260829-1";
-import { getProducts } from "../services/product-service.js?v=20260829-1";
-import { renderProductGrid } from "../ui.js?v=20260829-1";
+} from "../filters.js?v=20260829-2";
+import { getProducts } from "../services/product-service.js?v=20260829-2";
+import { renderProductGrid } from "../ui.js?v=20260829-2";
 import {
   debounce,
   escapeHtml,
   formatCurrency,
   getFocusableElements,
   setSiblingsInert,
-} from "../utils.js?v=20260829-1";
+} from "../utils.js?v=20260829-2";
 
 const PAGE_SIZE = 12;
 const products = getProducts();

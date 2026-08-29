@@ -1,5 +1,5 @@
-import { readSessionStorage, STORAGE_KEYS } from "../storage.js?v=20260829-1";
-import { escapeHtml, formatCurrency, formatDate, safeImage } from "../utils.js?v=20260829-1";
+import { readSessionStorage, STORAGE_KEYS } from "../storage.js?v=20260829-2";
+import { escapeHtml, formatCurrency, formatDate, safeImage } from "../utils.js?v=20260829-2";
 
 const FALLBACK_IMAGE = "assets/images/product-placeholder.svg";
 const container = document.querySelector("#order-confirmation");

@@ -61,7 +61,10 @@ Opening the HTML directly with a `file://` URL may be blocked by browser module 
 ```text
 .
 ├── assets/
-│   └── images/                 # Local resilient image fallback
+│   └── images/
+│       ├── products/           # Local catalog sample photography
+│       ├── editorial/          # Homepage hero, category, and journal photos
+│       └── product-placeholder.svg
 ├── css/
 │   ├── tokens.css              # Color, type, space, radii, shadows, motion
 │   ├── reset.css               # Browser normalization
@@ -115,7 +118,7 @@ badge, createdAt, images, colors, sizes, tags,
 description, specifications
 ```
 
-Images are delivered from Unsplash with a local SVG fallback. An internet connection is therefore needed for photographic catalog imagery; product names, controls, layout, and all commerce behavior remain usable if images fail.
+Images are stored locally under `assets/images/products/` and `assets/images/editorial/`, with `product-placeholder.svg` as a resilient fallback if a file is missing. The storefront no longer depends on a remote image host for catalog or homepage photography.
 
 ## Persistence
 
@@ -162,7 +165,7 @@ Recommended manual paths:
 - There is no authentication, server reconciliation, tax engine, address verification, fraud handling, analytics, or cross-device state.
 - Multi-tab localStorage changes are not merged transactionally.
 - Delivery dates, discounts, confirmation references, and payment choices are illustrative.
-- Remote product imagery depends on Unsplash availability.
+- Sample photography is illustrative demonstration media, not licensed product packaging from the named brands.
 - WCAG 2.2 AA considerations are implemented, but formal certification requires assistive-technology and contrast testing in the final deployment environment.
 
 ## Future improvements

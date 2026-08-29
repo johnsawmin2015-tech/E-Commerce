@@ -882,6 +882,7 @@
 .product-card__media-link {
   display: block;
   height: 100%;
+  position: relative;
 }
 
 .product-card__image {
@@ -3378,18 +3379,6 @@ dialog[open].modal__dialog {
   max-width: 34rem;
 }
 
-.hero__art {
-  background:
-    radial-gradient(circle at 68% 28%, rgb(255 253 249 / 45%) 0 8%, transparent 8.3%),
-    linear-gradient(142deg, transparent 0 45%, rgb(74 63 54 / 22%) 45.2% 54%, transparent 54.2%),
-    radial-gradient(ellipse at 35% 74%, #a07155 0 16%, transparent 16.3%),
-    linear-gradient(155deg, #d9c8b4 0%, #b9ab98 46%, #776f63 100%);
-  height: 100%;
-  inset: 0;
-  position: absolute;
-  width: 100%;
-}
-
 .hero__media figcaption {
   background: rgb(18 18 16 / 66%);
   color: var(--color-text-inverse);
@@ -3415,83 +3404,12 @@ dialog[open].modal__dialog {
   position: relative;
 }
 
-.category-card__visual::before,
-.category-card__visual::after {
-  content: "";
-  position: absolute;
+.category-card__visual img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
   transition: transform var(--duration-slow) var(--ease-emphasized);
-}
-
-.category-card__visual--home {
-  background: linear-gradient(150deg, #e6ddd0 0%, #afa18e 100%);
-}
-
-.category-card__visual--home::before {
-  background: #6d5d4c;
-  border-radius: 48% 48% 15% 15%;
-  height: 48%;
-  inset-block-end: 10%;
-  inset-inline-start: 25%;
-  width: 50%;
-}
-
-.category-card__visual--home::after {
-  background: rgb(255 253 249 / 68%);
-  border-radius: 50%;
-  height: 22%;
-  inset-block-start: 18%;
-  inset-inline-end: 12%;
-  width: 32%;
-}
-
-.category-card__visual--apparel {
-  background: linear-gradient(145deg, #c0b29e, #756a5b);
-}
-
-.category-card__visual--apparel::before {
-  background: #ece5da;
-  clip-path: polygon(31% 0, 69% 0, 100% 27%, 79% 43%, 70% 100%, 30% 100%, 21% 43%, 0 27%);
-  height: 70%;
-  inset-block-start: 15%;
-  inset-inline-start: 20%;
-  width: 60%;
-}
-
-.category-card__visual--accessories {
-  background: linear-gradient(145deg, #dccab8, #9b765f);
-}
-
-.category-card__visual--accessories::before {
-  background: #5a4638;
-  border-radius: 45% 45% 12% 12%;
-  height: 46%;
-  inset-block-end: 18%;
-  inset-inline-start: 18%;
-  width: 64%;
-}
-
-.category-card__visual--accessories::after {
-  border: 0.45rem solid #5a4638;
-  border-block-end: 0;
-  border-radius: 50% 50% 0 0;
-  height: 28%;
-  inset-block-start: 20%;
-  inset-inline-start: 33%;
-  width: 34%;
-}
-
-.category-card__visual--footwear {
-  background: linear-gradient(150deg, #c8c1b5, #7e8078);
-}
-
-.category-card__visual--footwear::before {
-  background: #f2eee7;
-  border-radius: 60% 18% 24% 30%;
-  height: 28%;
-  inset-block-end: 25%;
-  inset-inline-start: 15%;
-  transform: rotate(-8deg);
-  width: 70%;
+  width: 100%;
 }
 
 .category-card__content {
@@ -3513,9 +3431,8 @@ dialog[open].modal__dialog {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .category-card:hover .category-card__visual::before,
-  .category-card:hover .category-card__visual::after {
-    transform: translateY(-0.3rem) scale(1.025);
+  .category-card:hover .category-card__visual img {
+    transform: scale(1.025);
   }
 }
 
@@ -3530,11 +3447,18 @@ dialog[open].modal__dialog {
 }
 
 .editorial-banner__media {
-  background:
-    linear-gradient(115deg, transparent 0 52%, rgb(32 29 25 / 26%) 52.2%),
-    radial-gradient(ellipse at 32% 70%, #9d765a 0 18%, transparent 18.2%),
-    linear-gradient(145deg, #d0c0a9, #756b5e);
+  background: var(--neutral-800);
   min-height: 25rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.editorial-banner__media img {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
 }
 
 .editorial-banner__content {
@@ -3606,19 +3530,15 @@ dialog[open].modal__dialog {
 
 .journal-card__image {
   aspect-ratio: 16 / 10;
-  background: linear-gradient(145deg, #d8c8b2, #897968);
+  background: var(--color-canvas-subtle);
+  overflow: hidden;
 }
 
-.journal-card__image--one {
-  background:
-    linear-gradient(90deg, transparent 49%, rgb(255 253 249 / 38%) 49% 51%, transparent 51%),
-    linear-gradient(145deg, #d8cbb9, #8d7d69);
-}
-
-.journal-card__image--two {
-  background:
-    radial-gradient(circle at 38% 52%, #53453a 0 17%, transparent 17.3%),
-    linear-gradient(145deg, #c2b4a0, #6b726d);
+.journal-card__image img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
 }
 
 .journal-card__content {
