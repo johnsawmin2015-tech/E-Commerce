@@ -7,13 +7,13 @@
     <meta name="theme-color" content="#f4f0e8">
     <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
     <title>Morrow | Considered Objects for Everyday Living</title>
-    <link rel="stylesheet" href="./css/tokens.css?v=20260829-1">
-    <link rel="stylesheet" href="./css/reset.css?v=20260829-1">
-    <link rel="stylesheet" href="./css/base.css?v=20260829-1">
-    <link rel="stylesheet" href="./css/layout.css?v=20260829-1">
-    <link rel="stylesheet" href="./css/components.css?v=20260829-1">
-    <link rel="stylesheet" href="./css/utilities.css?v=20260829-1">
-    <link rel="stylesheet" href="./css/responsive.css?v=20260829-1">
+    <link rel="stylesheet" href="./css/tokens.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/reset.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/base.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/layout.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/components.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/utilities.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/responsive.css?v=20260829-2">
   </head>
   <body data-page="home">
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -90,7 +90,7 @@
             </div>
           </div>
           <figure class="hero__media">
-            <div class="hero__art" role="img" aria-label="A calm arrangement of modern Morrow home and travel objects"></div>
+            <img src="./assets/images/editorial/hero.jpg" alt="A calm living space with natural textures and considered home objects" width="1200" height="1500" fetchpriority="high">
             <figcaption>Form, function, and natural material in balance.</figcaption>
           </figure>
         </div>
@@ -108,25 +108,25 @@
           <div class="category-grid">
             <article class="category-card category-card--large">
               <a href="./shop.html?category=home">
-                <span class="category-card__visual category-card__visual--home" aria-hidden="true"></span>
+                <span class="category-card__visual"><img src="./assets/images/editorial/category-home.jpg" alt="" width="900" height="1125" loading="lazy"></span>
                 <span class="category-card__content"><span class="eyebrow">01</span><h3>Calm at home</h3><span>Warm textures and useful forms</span></span>
               </a>
             </article>
             <article class="category-card">
               <a href="./shop.html?category=apparel">
-                <span class="category-card__visual category-card__visual--apparel" aria-hidden="true"></span>
+                <span class="category-card__visual"><img src="./assets/images/editorial/category-apparel.jpg" alt="" width="900" height="1125" loading="lazy"></span>
                 <span class="category-card__content"><span class="eyebrow">02</span><h3>Everyday wear</h3><span>Easy layers, thoughtfully cut</span></span>
               </a>
             </article>
             <article class="category-card">
               <a href="./shop.html?category=accessories">
-                <span class="category-card__visual category-card__visual--accessories" aria-hidden="true"></span>
+                <span class="category-card__visual"><img src="./assets/images/editorial/category-accessories.jpg" alt="" width="900" height="1125" loading="lazy"></span>
                 <span class="category-card__content"><span class="eyebrow">03</span><h3>Everyday carry</h3><span>Useful details, always within reach</span></span>
               </a>
             </article>
             <article class="category-card">
               <a href="./shop.html?category=footwear">
-                <span class="category-card__visual category-card__visual--footwear" aria-hidden="true"></span>
+                <span class="category-card__visual"><img src="./assets/images/editorial/category-footwear.jpg" alt="" width="900" height="1125" loading="lazy"></span>
                 <span class="category-card__content"><span class="eyebrow">04</span><h3>Move with ease</h3><span>Grounded comfort for everyday miles</span></span>
               </a>
             </article>
@@ -151,7 +151,9 @@
 
       <section class="editorial-banner" aria-labelledby="editorial-banner-title">
         <div class="container editorial-banner__layout">
-          <div class="editorial-banner__media" role="img" aria-label="Natural materials arranged in a serene living space"></div>
+          <div class="editorial-banner__media">
+            <img src="./assets/images/editorial/editorial-banner.jpg" alt="Natural materials arranged in a serene living space" width="1400" height="1100" loading="lazy">
+          </div>
           <div class="editorial-banner__content">
             <p class="eyebrow">Material matters</p>
             <h2 id="editorial-banner-title">Fewer things. Better chosen.</h2>
@@ -214,11 +216,15 @@
           </div>
           <div class="journal-grid">
             <article class="journal-card journal-card--featured">
-              <div class="journal-card__image journal-card__image--one" aria-hidden="true"></div>
+              <div class="journal-card__image">
+                <img src="./assets/images/editorial/journal-shelf.jpg" alt="" width="1400" height="880" loading="lazy">
+              </div>
               <div class="journal-card__content"><p class="eyebrow">At home · 6 min</p><h3>The art of the useful shelf</h3><p>A practical approach to arranging the things you reach for every day.</p><a class="text-link" href="./shop.html?category=home">Explore the home edit</a></div>
             </article>
             <article class="journal-card">
-              <div class="journal-card__image journal-card__image--two" aria-hidden="true"></div>
+              <div class="journal-card__image">
+                <img src="./assets/images/editorial/journal-carry.jpg" alt="" width="1200" height="750" loading="lazy">
+              </div>
               <div class="journal-card__content"><p class="eyebrow">Field notes · 4 min</p><h3>Carry only what matters</h3><p>Versatile companions for an unhurried day out.</p><a class="text-link" href="./shop.html?category=accessories">Explore accessories</a></div>
             </article>
           </div>
@@ -272,7 +278,7 @@
     <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true" data-modal-exempt></div>
     <div class="toast-region" id="toast-region"></div>
 
-    <script type="module" src="./js/app.js?v=20260829-1"></script>
-    <script type="module" src="./js/pages/home.js?v=20260829-1"></script>
+    <script type="module" src="./js/app.js?v=20260829-2"></script>
+    <script type="module" src="./js/pages/home.js?v=20260829-2"></script>
   </body>
 </html>

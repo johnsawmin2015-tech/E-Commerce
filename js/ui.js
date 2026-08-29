@@ -44,12 +44,17 @@ export const productCardMarkup = (product, { showQuickAdd = true } = {}) => {
     ? Math.round((1 - product.price / product.originalPrice) * 100)
     : 0;
   const badge = unavailable ? "OUT OF STOCK" : product.badge;
+  const primaryImage = safeImage(product.images?.[0], FALLBACK_IMAGE);
+  const secondaryImage = product.images?.[1]
+    ? safeImage(product.images[1], FALLBACK_IMAGE)
+    : "";
 
   return `
     <article class="product-card${unavailable ? " product-card--unavailable" : ""}" data-product-id="${escapeHtml(product.id)}">
       <div class="product-card__media">
-        <a href="product.html?id=${encodeURIComponent(product.id)}" aria-label="View ${escapeHtml(product.name)}">
-          <img class="product-card__image" src="${escapeHtml(safeImage(product.images?.[0], FALLBACK_IMAGE))}" alt="${escapeHtml(product.name)}" loading="lazy" width="640" height="800" data-image-fallback>
+        <a class="product-card__media-link" href="product.html?id=${encodeURIComponent(product.id)}" aria-label="View ${escapeHtml(product.name)}">
+          <img class="product-card__image" src="${escapeHtml(primaryImage)}" alt="${escapeHtml(product.name)}" loading="lazy" width="640" height="800" data-image-fallback>
+          ${secondaryImage ? `<img class="product-card__image product-card__image--secondary" src="${escapeHtml(secondaryImage)}" alt="" loading="lazy" width="640" height="800" data-image-fallback>` : ""}
         </a>
         ${badge ? `<span class="badge product-card__badge">${escapeHtml(badge)}</span>` : ""}
         <button class="icon-btn product-card__wishlist" type="button" data-wishlist-id="${escapeHtml(product.id)}" aria-label="${wished ? "Remove" : "Add"} ${escapeHtml(product.name)} ${wished ? "from" : "to"} wishlist" aria-pressed="${wished}">

@@ -5,10 +5,10 @@
  * frozen so every consumer works from the same immutable source of truth.
  */
 
-const imageUrl = (photoId) =>
-  `https://images.unsplash.com/${photoId}?auto=format&fit=crop&w=1400&q=85`;
-
-const imageSet = (...photoIds) => photoIds.map(imageUrl);
+const productImages = (productId) => [
+  `assets/images/products/${productId}-a.jpg`,
+  `assets/images/products/${productId}-b.jpg`,
+];
 
 const deepFreeze = (value) => {
   if (!value || typeof value !== "object" || Object.isFrozen(value)) {
@@ -36,10 +36,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 94,
     badge: "SALE",
     createdAt: "2026-03-18T09:00:00.000Z",
-    images: imageSet(
-      "photo-1521572163474-6864f9cf17ab",
-      "photo-1503341504253-dff4815485f1",
-    ),
+    images: productImages("prod-001"),
     colors: ["Ink", "Bone", "Sage"],
     sizes: ["XS", "S", "M", "L", "XL"],
     tags: ["organic", "cotton", "t-shirt", "everyday", "unisex"],
@@ -68,10 +65,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 88,
     badge: "NEW",
     createdAt: "2026-08-02T09:00:00.000Z",
-    images: imageSet(
-      "photo-1618354691373-d851c5c3a990",
-      "photo-1576566588028-4147f3842f27",
-    ),
+    images: productImages("prod-002"),
     colors: ["Oat", "Charcoal", "Pine"],
     sizes: ["XS", "S", "M", "L", "XL"],
     tags: ["merino", "knitwear", "sweater", "layering", "responsible wool"],
@@ -100,10 +94,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 79,
     badge: null,
     createdAt: "2026-04-11T09:00:00.000Z",
-    images: imageSet(
-      "photo-1598033129183-c4f50c736f10",
-      "photo-1603252110481-7ba873bf42ab",
-    ),
+    images: productImages("prod-003"),
     colors: ["Flax", "Clay", "Indigo"],
     sizes: ["S", "M", "L", "XL"],
     tags: ["linen", "overshirt", "lightweight", "summer", "layering"],
@@ -132,10 +123,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 91,
     badge: "BEST SELLER",
     createdAt: "2026-02-24T09:00:00.000Z",
-    images: imageSet(
-      "photo-1566174053879-31528523f8ae",
-      "photo-1595777457583-95e059d581b8",
-    ),
+    images: productImages("prod-004"),
     colors: ["Midnight", "Garnet", "Champagne"],
     sizes: ["XS", "S", "M", "L"],
     tags: ["silk", "dress", "midi", "occasion", "evening"],
@@ -164,10 +152,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 81,
     badge: "NEW",
     createdAt: "2026-07-21T09:00:00.000Z",
-    images: imageSet(
-      "photo-1506629082955-511b1aa562c8",
-      "photo-1594633312681-425c7b97ccd1",
-    ),
+    images: productImages("prod-005"),
     colors: ["Black", "Taupe", "Navy"],
     sizes: ["24", "26", "28", "30", "32", "34"],
     tags: ["trousers", "tailored", "workwear", "wool blend", "pleated"],
@@ -197,10 +182,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 86,
     badge: "LIMITED",
     createdAt: "2026-01-30T09:00:00.000Z",
-    images: imageSet(
-      "photo-1551028719-00167b16eac5",
-      "photo-1591047139829-d91aecb6caea",
-    ),
+    images: productImages("prod-006"),
     colors: ["Forest", "Graphite"],
     sizes: ["S", "M", "L", "XL"],
     tags: ["jacket", "weatherproof", "outerwear", "travel", "recycled"],
@@ -229,10 +211,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 98,
     badge: "BEST SELLER",
     createdAt: "2025-11-14T09:00:00.000Z",
-    images: imageSet(
-      "photo-1549298916-b41d501d3772",
-      "photo-1542291026-7eec264c27ff",
-    ),
+    images: productImages("prod-007"),
     colors: ["White", "White / Gum", "Black"],
     sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44"],
     tags: ["sneakers", "leather", "minimal", "court", "everyday"],
@@ -261,10 +240,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 82,
     badge: null,
     createdAt: "2026-03-02T09:00:00.000Z",
-    images: imageSet(
-      "photo-1614252369475-531eba835eb1",
-      "photo-1533867617858-e7b97e060509",
-    ),
+    images: productImages("prod-008"),
     colors: ["Tobacco", "Espresso", "Sand"],
     sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44"],
     tags: ["loafer", "suede", "slip-on", "smart casual", "handmade"],
@@ -293,10 +269,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 90,
     badge: "NEW",
     createdAt: "2026-08-08T09:00:00.000Z",
-    images: imageSet(
-      "photo-1607522370275-f14206abe5d3",
-      "photo-1560769629-975ec94e6a86",
-    ),
+    images: productImages("prod-009"),
     colors: ["Stone / Moss", "Black / Clay", "Chalk / Blue"],
     sizes: ["37", "38", "39", "40", "41", "42", "43", "44", "45"],
     tags: ["trail", "running", "sneakers", "outdoor", "recycled"],
@@ -325,10 +298,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 76,
     badge: "OUT OF STOCK",
     createdAt: "2025-10-09T09:00:00.000Z",
-    images: imageSet(
-      "photo-1608256246200-53e635b5b65f",
-      "photo-1543163521-1bf539c55dd2",
-    ),
+    images: productImages("prod-010"),
     colors: ["Black", "Cognac"],
     sizes: ["36", "37", "38", "39", "40", "41"],
     tags: ["boots", "leather", "ankle boot", "heeled", "timeless"],
@@ -358,10 +328,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 72,
     badge: "SALE",
     createdAt: "2026-04-28T09:00:00.000Z",
-    images: imageSet(
-      "photo-1603487742131-4160ec999306",
-      "photo-1562273138-f46be4ebdf33",
-    ),
+    images: productImages("prod-011"),
     colors: ["Natural", "Black", "Terracotta"],
     sizes: ["36", "37", "38", "39", "40", "41", "42"],
     tags: ["sandals", "woven", "summer", "leather", "artisan"],
@@ -390,10 +357,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 77,
     badge: "NEW",
     createdAt: "2026-07-12T09:00:00.000Z",
-    images: imageSet(
-      "photo-1614252235316-8c857d38b5f4",
-      "photo-1449505278894-297fdb3edbc1",
-    ),
+    images: productImages("prod-012"),
     colors: ["Black", "Oxblood"],
     sizes: ["39", "40", "41", "42", "43", "44", "45"],
     tags: ["derby", "dress shoes", "leather", "formal", "minimal"],
@@ -422,10 +386,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 93,
     badge: "LIMITED",
     createdAt: "2026-01-17T09:00:00.000Z",
-    images: imageSet(
-      "photo-1523275335684-37898b6baf30",
-      "photo-1524805444758-089113d48a6d",
-    ),
+    images: productImages("prod-013"),
     colors: ["Silver / Black", "Silver / Tan", "Black / Black"],
     sizes: ["38 mm"],
     tags: ["watch", "automatic", "timepiece", "leather", "gift"],
@@ -454,10 +415,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 85,
     badge: "NEW",
     createdAt: "2026-07-29T09:00:00.000Z",
-    images: imageSet(
-      "photo-1584917865442-de89df76afd3",
-      "photo-1594223274512-ad4803739b7c",
-    ),
+    images: productImages("prod-014"),
     colors: ["Black", "Saddle", "Merlot"],
     sizes: ["One Size"],
     tags: ["bag", "crossbody", "leather", "compact", "travel"],
@@ -486,10 +444,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 95,
     badge: "BEST SELLER",
     createdAt: "2025-12-03T09:00:00.000Z",
-    images: imageSet(
-      "photo-1553062407-98eeb64c6a62",
-      "photo-1547949003-9792a18a2601",
-    ),
+    images: productImages("prod-015"),
     colors: ["Olive", "Navy", "Sand"],
     sizes: ["40 L"],
     tags: ["weekender", "travel", "canvas", "duffel", "carry-on"],
@@ -518,10 +473,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 83,
     badge: null,
     createdAt: "2026-04-06T09:00:00.000Z",
-    images: imageSet(
-      "photo-1511499767150-a48a237f0083",
-      "photo-1572635196237-14b3f281503f",
-    ),
+    images: productImages("prod-016"),
     colors: ["Black", "Tortoise", "Olive Crystal"],
     sizes: ["Medium"],
     tags: ["sunglasses", "acetate", "eyewear", "polarized", "summer"],
@@ -550,10 +502,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 80,
     badge: "NEW",
     createdAt: "2026-08-14T09:00:00.000Z",
-    images: imageSet(
-      "photo-1601924994987-69e26d50dc26",
-      "photo-1523779917675-b6ed3a42a561",
-    ),
+    images: productImages("prod-017"),
     colors: ["Camel", "Heather Grey", "Deep Teal"],
     sizes: ["One Size"],
     tags: ["scarf", "cashmere", "winter", "travel", "gift"],
@@ -582,10 +531,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 78,
     badge: null,
     createdAt: "2025-09-22T09:00:00.000Z",
-    images: imageSet(
-      "photo-1627123424574-724758594e93",
-      "photo-1601592996763-f05c9c80a7f1",
-    ),
+    images: productImages("prod-018"),
     colors: ["Black", "Cognac", "Navy"],
     sizes: ["One Size"],
     tags: ["wallet", "leather", "card holder", "slim", "gift"],
@@ -614,10 +560,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 89,
     badge: "BEST SELLER",
     createdAt: "2026-02-06T09:00:00.000Z",
-    images: imageSet(
-      "photo-1507473885765-e6ed057f782c",
-      "photo-1618220179428-22790b461013",
-    ),
+    images: productImages("prod-019"),
     colors: ["Chalk", "Moss", "Charcoal"],
     sizes: ["One Size"],
     tags: ["lamp", "lighting", "ceramic", "bedside", "handmade"],
@@ -646,10 +589,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 96,
     badge: "BEST SELLER",
     createdAt: "2025-11-27T09:00:00.000Z",
-    images: imageSet(
-      "photo-1583845112203-454c2254edda",
-      "photo-1604014237800-1c9102c219da",
-    ),
+    images: productImages("prod-020"),
     colors: ["Oatmeal", "Rust", "Slate"],
     sizes: ["130 × 180 cm"],
     tags: ["throw", "blanket", "wool", "textile", "living room"],
@@ -678,10 +618,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 84,
     badge: null,
     createdAt: "2026-03-26T09:00:00.000Z",
-    images: imageSet(
-      "photo-1610701596007-11502861dcfa",
-      "photo-1603006905003-be475563bc59",
-    ),
+    images: productImages("prod-021"),
     colors: ["Speckled White", "Ash Blue", "Sand"],
     sizes: ["12 Piece"],
     tags: ["dinnerware", "stoneware", "ceramic", "table", "kitchen"],
@@ -710,10 +647,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 87,
     badge: "NEW",
     createdAt: "2026-08-17T09:00:00.000Z",
-    images: imageSet(
-      "photo-1602874801006-e26e4e3287c1",
-      "photo-1578749556568-bc2c40e68b61",
-    ),
+    images: productImages("prod-022"),
     colors: ["Smoke Glass"],
     sizes: ["280 g"],
     tags: ["candle", "cedar", "fragrance", "soy wax", "gift"],
@@ -742,10 +676,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 82,
     badge: "LIMITED",
     createdAt: "2026-01-08T09:00:00.000Z",
-    images: imageSet(
-      "photo-1532372320572-cda25653a694",
-      "photo-1618221195710-dd6b41faaea6",
-    ),
+    images: productImages("prod-023"),
     colors: ["Natural Oak", "Smoked Oak"],
     sizes: ["One Size"],
     tags: ["side table", "oak", "furniture", "living room", "solid wood"],
@@ -775,10 +706,7 @@ export const PRODUCTS = deepFreeze([
     popularity: 75,
     badge: "SALE",
     createdAt: "2026-04-19T09:00:00.000Z",
-    images: imageSet(
-      "photo-1586023492125-27b2c045efd7",
-      "photo-1555041469-a586c61ea9bc",
-    ),
+    images: productImages("prod-024"),
     colors: ["Natural", "Sage", "Terracotta"],
     sizes: ["50 × 50 cm"],
     tags: ["cushions", "linen", "pillows", "textile", "living room"],
