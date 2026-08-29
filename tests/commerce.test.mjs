@@ -75,6 +75,23 @@ test("shop URL state round-trips multiple facets", () => {
   assert.deepEqual(filters.readShopState(params), state);
 });
 
+test("search defaults to relevance ranking instead of featured", () => {
+  const params = new URLSearchParams("q=linen");
+  assert.equal(filters.readShopState(params).sort, "relevance");
+
+  const results = filters.applyProductPipeline(catalog.getProducts(), {
+    q: "linen",
+    sort: "relevance",
+  });
+  assert.equal(results[0]?.name, "Atelier Linen Overshirt");
+
+  const explicitFeatured = filters.applyProductPipeline(catalog.getProducts(), {
+    q: "linen",
+    sort: "featured",
+  });
+  assert.equal(explicitFeatured[0]?.name, "Noma Ceramic Table Lamp");
+});
+
 test("cart merges identical variants and separates different variants", () => {
   cart.clearCart();
   const first = catalog.getProductById("prod-001");

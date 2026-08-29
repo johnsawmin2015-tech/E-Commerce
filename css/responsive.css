@@ -203,8 +203,9 @@
     justify-content: center;
   }
 
-  .header-search,
-  .global-search {
+  /* Legacy header-shell search slot stays collapsed; the live global search
+     remains available whenever the desktop nav is shown. */
+  .header-search {
     display: none;
   }
 
@@ -507,7 +508,13 @@
 
 @media (min-width: 64rem) {
   .site-header__inner {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: auto minmax(0, 1fr) minmax(12rem, 18rem) auto;
+  }
+
+  .global-search {
+    display: block;
+    max-width: 18rem;
+    width: 100%;
   }
 
   .mobile-menu-button,
@@ -574,7 +581,6 @@
   }
 
   .global-search {
-    display: block;
     max-width: 20rem;
   }
 

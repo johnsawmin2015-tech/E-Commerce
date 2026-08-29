@@ -187,15 +187,18 @@ const toSearchParams = (value) => {
 export const readShopState = (searchParams) => {
   const params = toSearchParams(searchParams);
   const readMany = (key) => params.getAll(key).flatMap((value) => value.split(","));
+  const query = params.get("q") ?? "";
 
+  // Searches are relevance-ranked unless the URL names another sort. Featured is
+  // only the default when the catalog is browsed without a query.
   return normalizeFilterState({
-    q: params.get("q") ?? "",
+    q: query,
     categories: readMany("category"),
     brands: readMany("brand"),
     availability: params.get("availability") ?? "all",
     minPrice: params.get("minPrice") ?? "",
     maxPrice: params.get("maxPrice") ?? "",
-    sort: params.get("sort") ?? "featured",
+    sort: params.get("sort") ?? (query.trim() ? "relevance" : DEFAULT_FILTER_STATE.sort),
     page: params.get("page") ?? 1,
   });
 };

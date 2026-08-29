@@ -1,5 +1,5 @@
-import { readSessionStorage, STORAGE_KEYS } from "../storage.js";
-import { escapeHtml, formatCurrency, formatDate, safeImage } from "../utils.js";
+import { readSessionStorage, STORAGE_KEYS } from "../storage.js?v=20260829-1";
+import { escapeHtml, formatCurrency, formatDate, safeImage } from "../utils.js?v=20260829-1";
 
 const FALLBACK_IMAGE = "assets/images/product-placeholder.svg";
 const container = document.querySelector("#order-confirmation");
@@ -29,8 +29,13 @@ const validOrder = order
   && Number.isFinite(order.totals?.discount)
   && Number.isFinite(order.totals?.total);
 
+const confirmationLede = document.querySelector("#confirmation-lede");
+
 if (container && !validOrder) {
   container.setAttribute("aria-busy", "false");
+  if (confirmationLede) {
+    confirmationLede.textContent = "Complete the simulated checkout to create an order summary for this tab.";
+  }
   container.innerHTML = `
     <div class="empty-state empty-state--page">
       <span class="empty-state__icon" aria-hidden="true">◇</span>
@@ -41,6 +46,9 @@ if (container && !validOrder) {
     </div>`;
 } else if (container) {
   container.setAttribute("aria-busy", "false");
+  if (confirmationLede) {
+    confirmationLede.textContent = "Your simulated order details are ready below.";
+  }
   const deliveryStart = formatDate(order.estimatedDelivery.start, { month: "short", day: "numeric", year: undefined });
   const deliveryEnd = formatDate(order.estimatedDelivery.end, { month: "short", day: "numeric", year: undefined });
   container.innerHTML = `

@@ -3,16 +3,16 @@ import {
   normalizeFilterState,
   readShopState,
   serializeShopState,
-} from "../filters.js";
-import { getProducts } from "../services/product-service.js";
-import { renderProductGrid } from "../ui.js";
+} from "../filters.js?v=20260829-1";
+import { getProducts } from "../services/product-service.js?v=20260829-1";
+import { renderProductGrid } from "../ui.js?v=20260829-1";
 import {
   debounce,
   escapeHtml,
   formatCurrency,
   getFocusableElements,
   setSiblingsInert,
-} from "../utils.js";
+} from "../utils.js?v=20260829-1";
 
 const PAGE_SIZE = 12;
 const products = getProducts();
@@ -272,12 +272,27 @@ elements.form?.addEventListener("submit", (event) => {
   collectFilterForm();
   setFilterPanel(false);
 });
+const applySearchQuery = (query, { historyMode = "push" } = {}) => {
+  const previousQuery = state.q;
+  state.q = query;
+  state.page = 1;
+
+  // Entering a query from browse mode should surface relevance ranking. Leaving
+  // a query restores featured unless the shopper already chose another sort.
+  if (state.q && !previousQuery && state.sort === "featured") {
+    state.sort = "relevance";
+  } else if (!state.q && previousQuery && state.sort === "relevance") {
+    state.sort = "featured";
+  }
+
+  syncForm();
+  render({ historyMode });
+};
+
 elements.searchForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   searchHistoryPrimed = true;
-  state.q = elements.search.value.trim();
-  state.page = 1;
-  render({ historyMode: "push" });
+  applySearchQuery(elements.search.value.trim(), { historyMode: "push" });
 });
 elements.search?.addEventListener("focus", () => {
   searchHistoryPrimed = false;
@@ -291,9 +306,7 @@ elements.search?.addEventListener("input", debounce(() => {
     );
     searchHistoryPrimed = true;
   }
-  state.q = elements.search.value.trim();
-  state.page = 1;
-  render({ historyMode: "replace" });
+  applySearchQuery(elements.search.value.trim(), { historyMode: "replace" });
 }, 180));
 elements.sort?.addEventListener("change", () => {
   state.sort = elements.sort.value;

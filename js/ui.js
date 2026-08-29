@@ -272,7 +272,6 @@ const setDrawerState = (open) => {
   }
 
   syncBodyScrollLock();
-  document.querySelectorAll("[data-open-cart]").forEach((button) => button.setAttribute("aria-expanded", String(open)));
   if (open) {
     window.setTimeout(() => {
       if (!drawer.hidden && !drawer.contains(document.activeElement)) {
@@ -297,10 +296,6 @@ export const closeCartDrawer = () => setDrawerState(false);
 const initCartDrawer = () => {
   const drawer = document.querySelector("#cart-drawer");
   if (!drawer) return;
-  document.querySelectorAll("[data-open-cart]").forEach((button) => button.addEventListener("click", (event) => {
-    event.preventDefault();
-    openCartDrawer();
-  }));
   document.querySelector("#cart-drawer-close")?.addEventListener("click", closeCartDrawer);
   document.querySelector("#cart-drawer-backdrop")?.addEventListener("click", closeCartDrawer);
   drawer.addEventListener("keydown", (event) => {

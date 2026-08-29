@@ -1,4 +1,4 @@
-import { initializeGlobalUI } from "./ui.js";
+import { initializeGlobalUI } from "./ui.js?v=20260829-1";
 
 const start = () => initializeGlobalUI();
 
