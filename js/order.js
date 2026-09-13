@@ -1,22 +1,8 @@
 import { getCart } from "./cart.js";
 import { getProductById } from "./services/product-service.js";
+import { calculatePricing, SHIPPING_METHODS } from "./services/pricingService.js";
 
-export const SHIPPING_METHODS = Object.freeze({
-  standard: {
-    id: "standard",
-    label: "Standard delivery",
-    description: "Arrives in 4–6 business days",
-    price: 12,
-    freeThreshold: 150,
-  },
-  express: {
-    id: "express",
-    label: "Express delivery",
-    description: "Arrives in 1–2 business days",
-    price: 24,
-    freeThreshold: Infinity,
-  },
-});
+export { SHIPPING_METHODS };
 
 export const PROMOTION = Object.freeze({
   code: "MORROW10",
@@ -34,15 +20,16 @@ export const getPromotionCode = () => {
   }
 };
 
-export const setPromotionCode = (code = "") => {
+export const setPromotionCode = (code = "", { validated = false } = {}) => {
   const normalized = String(code).trim().toUpperCase();
+  const accepted = normalized === PROMOTION.code || (validated && /^[A-Z0-9][A-Z0-9-]{1,22}$/.test(normalized));
   try {
-    if (normalized === PROMOTION.code) window.sessionStorage.setItem(PROMOTION_SESSION_KEY, normalized);
+    if (accepted) window.sessionStorage.setItem(PROMOTION_SESSION_KEY, normalized);
     else window.sessionStorage.removeItem(PROMOTION_SESSION_KEY);
   } catch {
     // The pricing flow remains usable when storage is unavailable.
   }
-  return normalized === PROMOTION.code;
+  return accepted;
 };
 
 export const getDetailedCart = () =>
@@ -54,21 +41,31 @@ export const calculateOrder = ({
   items = getDetailedCart(),
   shippingMethod = "standard",
   discountCode = "",
+  includeTax = false,
 } = {}) => {
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const method = SHIPPING_METHODS[shippingMethod] || SHIPPING_METHODS.standard;
-  const shipping = subtotal >= method.freeThreshold ? 0 : method.price;
-  const validDiscount = discountCode.trim().toUpperCase() === PROMOTION.code;
-  const discount = validDiscount ? Math.round(subtotal * PROMOTION.rate * 100) / 100 : 0;
-  const total = Math.max(0, subtotal + shipping - discount);
-  return {
-    items,
-    itemCount: items.reduce((sum, item) => sum + item.quantity, 0),
-    subtotal,
-    shipping,
+  const detailed = items;
+  const subtotalItems = detailed.map((item) => ({
+    ...item,
+    unitPrice: item.unitPrice ?? item.product?.price ?? 0,
+    quantity: item.quantity,
+  }));
+  const validDiscount = String(discountCode).trim().toUpperCase() === PROMOTION.code;
+  const provisional = calculatePricing({
+    items: subtotalItems,
+    discount: 0,
+    shippingMethod,
+    includeTax: false,
+  });
+  const discount = validDiscount ? Math.round(provisional.subtotal * PROMOTION.rate * 100) / 100 : 0;
+  const priced = calculatePricing({
+    items: subtotalItems,
     discount,
-    total,
-    shippingMethod: method,
+    shippingMethod,
+    includeTax,
+  });
+  return {
+    ...priced,
+    items: detailed,
     discountCode: validDiscount ? PROMOTION.code : "",
   };
 };

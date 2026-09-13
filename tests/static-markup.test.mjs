@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 import test from "node:test";
@@ -13,6 +13,12 @@ const pages = [
   "wishlist.html",
   "checkout.html",
   "order-success.html",
+  "account.html",
+  "compare.html",
+  "orders.html",
+  ...readdirSync(resolve(root, "admin"))
+    .filter((entry) => entry.endsWith(".html"))
+    .map((entry) => `admin/${entry}`),
 ];
 
 const readPage = (page) => readFileSync(resolve(root, page), "utf8");
@@ -38,8 +44,45 @@ test("static IDs are unique within every page", () => {
   });
 });
 
+test("JavaScript modules do not cache-bust relative imports", () => {
+  const walk = (dir) => {
+    const entries = readdirSync(dir, { withFileTypes: true });
+    return entries.flatMap((entry) => {
+      const next = resolve(dir, entry.name);
+      if (entry.isDirectory()) return walk(next);
+      return entry.name.endsWith(".js") ? [next] : [];
+    });
+  };
+
+  walk(resolve(root, "js")).forEach((file) => {
+    const source = readFileSync(file, "utf8");
+    const matches = source.match(/from\s+["'][^"']+\?v=/g) || [];
+    assert.equal(matches.length, 0, `${file} imports a query-string module URL: ${matches.join(", ")}`);
+  });
+});
+
+test("all relative JavaScript imports resolve to local modules", () => {
+  const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const next = resolve(dir, entry.name);
+    if (entry.isDirectory()) return walk(next);
+    return entry.name.endsWith(".js") ? [next] : [];
+  });
+  const files = walk(resolve(root, "js"));
+  files.forEach((file) => {
+    const source = readFileSync(file, "utf8");
+    const imports = [...source.matchAll(/(?:from\s*["']|import\(\s*["'])([^"']+)["']/g)]
+      .map((match) => match[1])
+      .filter((specifier) => specifier.startsWith("."));
+    imports.forEach((specifier) => {
+      const target = resolve(dirname(file), specifier.split("?")[0]);
+      assert.ok(existsSync(target) || existsSync(`${target}.js`) || existsSync(`${target}/index.js`), `${file} imports missing ${specifier}`);
+    });
+  });
+});
+
 test("local HTML asset and navigation targets exist", () => {
   pages.forEach((page) => {
+    const pageDir = dirname(resolve(root, page));
     const references = [...readPage(page).matchAll(/\s(?:href|src)="([^"]+)"/g)]
       .map((match) => match[1])
       .filter((value) => !/^(?:#|https?:|mailto:|tel:|data:|javascript:)/i.test(value));
@@ -47,7 +90,7 @@ test("local HTML asset and navigation targets exist", () => {
     references.forEach((reference) => {
       const localPath = decodeURIComponent(reference.split(/[?#]/, 1)[0]);
       assert.ok(
-        existsSync(resolve(root, localPath)),
+        existsSync(resolve(pageDir, localPath)),
         `${page} references missing local target ${reference}`,
       );
     });

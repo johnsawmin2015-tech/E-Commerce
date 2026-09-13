@@ -3,16 +3,20 @@ import {
   normalizeFilterState,
   readShopState,
   serializeShopState,
-} from "../filters.js?v=20260829-2";
-import { getProducts } from "../services/product-service.js?v=20260829-2";
-import { renderProductGrid } from "../ui.js?v=20260829-2";
+} from "../filters.js";
+import { getProducts } from "../services/product-service.js";
+import { renderProductGrid } from "../ui.js";
 import {
   debounce,
   escapeHtml,
   formatCurrency,
   getFocusableElements,
   setSiblingsInert,
-} from "../utils.js?v=20260829-2";
+} from "../utils.js";
+import { appReady } from "../core/app.js";
+import { rememberSearch } from "../features/search/searchHistory.js";
+
+await appReady().catch(() => {});
 
 const PAGE_SIZE = 12;
 const products = getProducts();
@@ -37,6 +41,12 @@ const elements = {
 const facetKey = (value) => String(value ?? "").trim().toLocaleLowerCase("en-US");
 const categoryLookup = new Map(products.map((product) => [facetKey(product.category), product.category]));
 const brandLookup = new Map(products.map((product) => [facetKey(product.brand), product.brand]));
+const subcategoryLookup = new Map(products.map((product) => [facetKey(product.subcategory), product.subcategory]).filter(([, value]) => value));
+const colorLookup = new Map(products.flatMap((product) => (product.colors || []).map((color) => {
+  const name = typeof color === "string" ? color : color.name;
+  return [facetKey(name), name];
+})));
+const sizeLookup = new Map(products.flatMap((product) => (product.sizes || []).map((size) => [facetKey(size), size])));
 
 const canonicalizeFacets = (values, lookup) => [
   ...new Set(values.map((value) => lookup.get(facetKey(value))).filter(Boolean)),
@@ -54,6 +64,9 @@ const sanitizeState = (candidate) => {
     ...normalized,
     categories: canonicalizeFacets(normalized.categories, categoryLookup),
     brands: canonicalizeFacets(normalized.brands, brandLookup),
+    subcategories: canonicalizeFacets(normalized.subcategories || [], subcategoryLookup),
+    colors: canonicalizeFacets(normalized.colors || [], colorLookup),
+    sizes: canonicalizeFacets(normalized.sizes || [], sizeLookup),
     minPrice,
     maxPrice,
   };
@@ -82,17 +95,54 @@ const renderFilterOptions = () => {
   if (elements.categoryFilters) {
     elements.categoryFilters.innerHTML = [...categoryCounts.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([category, count]) => `<label class="check-row">
+      .map(([category, count]) => `<label class="check-row" aria-label="${escapeHtml(titleCase(category))}, ${count} products">
         <input type="checkbox" name="category" value="${escapeHtml(category)}">
-        <span>${escapeHtml(titleCase(category))}</span><small>${count}</small>
+        <span>${escapeHtml(titleCase(category))}</span>
+        <small>${count}</small>
       </label>`).join("");
   }
   if (elements.brandFilters) {
     elements.brandFilters.innerHTML = [...brandCounts.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([brand, count]) => `<label class="check-row">
+      .map(([brand, count]) => `<label class="check-row" aria-label="${escapeHtml(brand)}, ${count} products">
         <input type="checkbox" name="brand" value="${escapeHtml(brand)}">
-        <span>${escapeHtml(brand)}</span><small>${count}</small>
+        <span>${escapeHtml(brand)}</span>
+        <small>${count}</small>
+      </label>`).join("");
+  }
+  const subcategoryFilters = document.querySelector("#subcategory-filters");
+  if (subcategoryFilters) {
+    const counts = products.reduce((map, product) => {
+      if (!product.subcategory) return map;
+      map.set(product.subcategory, (map.get(product.subcategory) || 0) + 1);
+      return map;
+    }, new Map());
+    subcategoryFilters.innerHTML = [...counts.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .slice(0, 16)
+      .map(([name, count]) => `<label class="check-row" aria-label="${escapeHtml(name)}, ${count} products">
+        <input type="checkbox" name="subcategory" value="${escapeHtml(name)}">
+        <span>${escapeHtml(name)}</span>
+        <small>${count}</small>
+      </label>`).join("");
+  }
+  const colorFilters = document.querySelector("#color-filters");
+  if (colorFilters) {
+    colorFilters.innerHTML = [...colorLookup.values()]
+      .sort((a, b) => a.localeCompare(b))
+      .slice(0, 18)
+      .map((color) => `<label class="check-row">
+        <input type="checkbox" name="color" value="${escapeHtml(color)}">
+        <span>${escapeHtml(color)}</span>
+      </label>`).join("");
+  }
+  const sizeFilters = document.querySelector("#size-filters");
+  if (sizeFilters) {
+    sizeFilters.innerHTML = [...sizeLookup.values()]
+      .sort((a, b) => a.localeCompare(b))
+      .map((size) => `<label class="check-row">
+        <input type="checkbox" name="size" value="${escapeHtml(size)}">
+        <span>${escapeHtml(size)}</span>
       </label>`).join("");
   }
 };
@@ -106,6 +156,19 @@ const syncForm = () => {
   elements.form?.querySelectorAll('input[name="brand"]').forEach((input) => {
     input.checked = state.brands.includes(input.value);
   });
+  elements.form?.querySelectorAll('input[name="subcategory"]').forEach((input) => {
+    input.checked = (state.subcategories || []).includes(input.value);
+  });
+  elements.form?.querySelectorAll('input[name="color"]').forEach((input) => {
+    input.checked = (state.colors || []).includes(input.value);
+  });
+  elements.form?.querySelectorAll('input[name="size"]').forEach((input) => {
+    input.checked = (state.sizes || []).includes(input.value);
+  });
+  const onSale = elements.form?.querySelector('input[name="onSale"]');
+  if (onSale) onSale.checked = Boolean(state.onSale);
+  const minRating = elements.form?.elements.namedItem("minRating");
+  if (minRating) minRating.value = state.minRating || "";
   const availability = elements.form?.querySelector(`input[name="availability"][value="${state.availability}"]`);
   if (availability) availability.checked = true;
   const minPrice = elements.form?.elements.namedItem("minPrice");
@@ -128,7 +191,12 @@ const updateUrl = (mode = "replace") => {
 const getActiveFilterCount = () =>
   state.categories.length
   + state.brands.length
+  + (state.subcategories?.length || 0)
+  + (state.colors?.length || 0)
+  + (state.sizes?.length || 0)
   + (state.availability !== "all" ? 1 : 0)
+  + (state.onSale ? 1 : 0)
+  + (state.minRating ? 1 : 0)
   + (state.minPrice !== "" ? 1 : 0)
   + (state.maxPrice !== "" ? 1 : 0);
 
@@ -137,8 +205,13 @@ const renderActiveFilters = () => {
   const chips = [
     ...state.categories.map((value) => ({ kind: "category", value, label: titleCase(value) })),
     ...state.brands.map((value) => ({ kind: "brand", value, label: value })),
+    ...(state.subcategories || []).map((value) => ({ kind: "subcategory", value, label: value })),
+    ...(state.colors || []).map((value) => ({ kind: "color", value, label: value })),
+    ...(state.sizes || []).map((value) => ({ kind: "size", value, label: value })),
   ];
   if (state.availability !== "all") chips.push({ kind: "availability", value: state.availability, label: titleCase(state.availability) });
+  if (state.onSale) chips.push({ kind: "onSale", value: "true", label: "On sale" });
+  if (state.minRating) chips.push({ kind: "minRating", value: state.minRating, label: `${state.minRating}+ stars` });
   if (state.minPrice !== "") chips.push({ kind: "minPrice", value: state.minPrice, label: `From ${formatCurrency(Number(state.minPrice))}` });
   if (state.maxPrice !== "") chips.push({ kind: "maxPrice", value: state.maxPrice, label: `Up to ${formatCurrency(Number(state.maxPrice))}` });
   elements.active.innerHTML = chips.map((chip) => `<button type="button" class="chip" data-remove-filter="${chip.kind}" data-filter-value="${escapeHtml(chip.value)}">${escapeHtml(chip.label)} <span aria-hidden="true">×</span><span class="sr-only">Remove filter</span></button>`).join("");
@@ -197,9 +270,14 @@ const collectFilterForm = ({ historyMode = "push" } = {}) => {
     ...state,
     categories: formData.getAll("category"),
     brands: formData.getAll("brand"),
+    subcategories: formData.getAll("subcategory"),
+    colors: formData.getAll("color"),
+    sizes: formData.getAll("size"),
     availability: formData.get("availability") || "all",
+    onSale: formData.get("onSale") === "on" || formData.get("onSale") === "true",
     minPrice: String(formData.get("minPrice") || "").trim(),
     maxPrice: String(formData.get("maxPrice") || "").trim(),
+    minRating: String(formData.get("minRating") || "").trim(),
     page: 1,
   });
   syncForm();
@@ -210,10 +288,15 @@ const clearFilters = () => {
   state = {
     q: "",
     categories: [],
+    subcategories: [],
     brands: [],
+    colors: [],
+    sizes: [],
     availability: "all",
+    onSale: false,
     minPrice: "",
     maxPrice: "",
+    minRating: "",
     sort: "featured",
     page: 1,
   };
@@ -285,6 +368,10 @@ const applySearchQuery = (query, { historyMode = "push" } = {}) => {
     state.sort = "featured";
   }
 
+  if (state.q) {
+    rememberSearch(state.q, { resultCount: applyProductPipeline(products, state).length });
+  }
+
   syncForm();
   render({ historyMode });
 };
@@ -335,7 +422,12 @@ elements.active?.addEventListener("click", (event) => {
     .indexOf(button);
   if (kind === "category") state.categories = state.categories.filter((item) => item !== value);
   if (kind === "brand") state.brands = state.brands.filter((item) => item !== value);
+  if (kind === "subcategory") state.subcategories = (state.subcategories || []).filter((item) => item !== value);
+  if (kind === "color") state.colors = (state.colors || []).filter((item) => item !== value);
+  if (kind === "size") state.sizes = (state.sizes || []).filter((item) => item !== value);
   if (kind === "availability") state.availability = "all";
+  if (kind === "onSale") state.onSale = false;
+  if (kind === "minRating") state.minRating = "";
   if (kind === "minPrice" || kind === "maxPrice") state[kind] = "";
   state.page = 1;
   syncForm();

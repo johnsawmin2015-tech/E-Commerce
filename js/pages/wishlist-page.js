@@ -2,6 +2,9 @@ import { addToCart } from "../cart.js";
 import { getProductById } from "../services/product-service.js";
 import { getWishlist, removeFromWishlist } from "../wishlist.js";
 import { productCardMarkup, showToast } from "../ui.js";
+import { appReady } from "../core/app.js";
+
+await appReady().catch(() => {});
 
 const container = document.querySelector("#wishlist-page");
 let focusAfterRender = false;

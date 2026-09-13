@@ -1,9 +1,14 @@
 import { addToCart } from "../cart.js";
 import { getProductById, getRelatedProducts } from "../services/product-service.js";
-import { readStorage, writeStorage, STORAGE_KEYS } from "../storage.js";
 import { isWishlisted } from "../wishlist.js";
 import { openCartDrawer, renderProductGrid, showToast } from "../ui.js";
 import { clamp, escapeHtml, formatCurrency, safeImage } from "../utils.js";
+import { appReady } from "../core/app.js";
+import { recordProductView, getRecentlyViewedProducts } from "../features/wishlist/recentlyViewed.js";
+import { getSimilarProducts, getFrequentlyBoughtTogether } from "../services/recommendationService.js";
+import { listReviews, averageRating, createReview } from "../services/reviewService.js";
+
+await appReady().catch(() => {});
 
 const FALLBACK_IMAGE = "assets/images/product-placeholder.svg";
 const productView = document.querySelector("#product-view");
@@ -28,6 +33,7 @@ const getColorHex = (color) => {
 const renderNotFound = () => {
   document.title = "Product not found — Morrow";
   if (productView) {
+    productView.setAttribute("aria-busy", "false");
     productView.innerHTML = `
       <div class="empty-state empty-state--page">
         <span class="empty-state__icon" aria-hidden="true">?</span>
@@ -77,7 +83,7 @@ if (!product) {
       <section class="product-info" aria-labelledby="product-title">
         <p class="eyebrow">${escapeHtml(product.brand)}</p>
         <h1 id="product-title">${escapeHtml(product.name)}</h1>
-        <a class="product-info__rating" href="#product-details" aria-label="Rated ${product.rating} out of 5 from ${product.reviewCount} reviews">
+        <a class="product-info__rating" href="#product-reviews" aria-label="Rated ${product.rating} out of 5 from ${product.reviewCount} reviews">
           <span aria-hidden="true">★★★★★</span> ${product.rating} <span>(${product.reviewCount} reviews)</span>
         </a>
         <div class="price price--large" aria-label="Price ${formatCurrency(product.price)}${product.originalPrice ? `, originally ${formatCurrency(product.originalPrice)}` : ""}">
@@ -117,13 +123,14 @@ if (!product) {
             ${unavailable ? "Unavailable" : "Add to bag"}
           </button>
           <button class="icon-btn icon-btn--bordered" type="button" data-wishlist-id="${escapeHtml(product.id)}" aria-label="${isWishlisted(product.id) ? "Remove" : "Add"} ${escapeHtml(product.name)} ${isWishlisted(product.id) ? "from" : "to"} wishlist" aria-pressed="${isWishlisted(product.id)}"><span aria-hidden="true">${isWishlisted(product.id) ? "♥" : "♡"}</span></button>
+          <button class="btn btn--secondary" type="button" data-compare-id="${escapeHtml(product.id)}">Compare</button>
         </div>
         <p class="form-hint" id="product-selection-hint" aria-live="polite">${product.colors?.length || product.sizes?.length ? "Choose the available options before adding to your bag." : ""}</p>
 
         <div class="product-assurances" aria-label="Shopping assurances">
           <div><span aria-hidden="true">◇</span><strong>Complimentary delivery</strong><small>On standard orders over $150</small></div>
           <div><span aria-hidden="true">↺</span><strong>Considered returns</strong><small>30 days in original condition</small></div>
-          <div><span aria-hidden="true">◎</span><strong>Secure demo checkout</strong><small>No payment details are stored</small></div>
+          <div><span aria-hidden="true">◎</span><strong>Simulated checkout</strong><small>No payment details are stored</small></div>
         </div>
 
         <div class="product-accordions" id="product-details">
@@ -206,22 +213,61 @@ if (!product) {
   });
 
   updatePurchaseState();
-  renderProductGrid(relatedContainer, getRelatedProducts(product.id, 4));
+  const similar = getSimilarProducts(product.id, 4);
+  renderProductGrid(relatedContainer, similar.length ? similar : getRelatedProducts(product.id, 4));
+  const together = getFrequentlyBoughtTogether(product.id, 2);
+  const togetherMount = document.querySelector("#bought-together");
+  if (togetherMount) {
+    if (together.length) renderProductGrid(togetherMount, together);
+    else togetherMount.closest("section")?.setAttribute("hidden", "");
+  }
 
-  const recentIds = readStorage(STORAGE_KEYS.RECENTLY_VIEWED, []);
-  const validRecentIds = (Array.isArray(recentIds) ? recentIds : [])
-    .map((id) => String(id ?? "").trim())
-    .filter((id, index, ids) => id && id !== product.id && ids.indexOf(id) === index && getProductById(id));
-  const recentProducts = validRecentIds
-    .map((id) => getProductById(id))
-    .slice(0, 4);
+  const recentProducts = getRecentlyViewedProducts(product.id, 4);
   if (recentProducts.length) {
     renderProductGrid(recentContainer, recentProducts);
-  } else {
+  } else if (recentContainer) {
+    recentContainer.innerHTML = "";
     recentContainer.closest("section")?.setAttribute("hidden", "");
   }
-  writeStorage(STORAGE_KEYS.RECENTLY_VIEWED, [
-    product.id,
-    ...validRecentIds,
-  ].slice(0, 8));
+  recordProductView(product.id);
+
+  const reviewsMount = document.querySelector("#product-reviews");
+  if (reviewsMount) {
+    listReviews(product.id).then((reviews) => {
+      const avg = reviews.length ? averageRating(reviews) : null;
+      reviewsMount.innerHTML = `
+        <h2 id="reviews-title">Reviews</h2>
+        <p>${reviews.length ? `Average from ${reviews.length} stored reviews: ${avg} / 5.` : "No published reviews yet."}</p>
+        ${reviews.length ? `<ul class="review-list">${reviews.map((review) => `<li>
+          <strong>${escapeHtml(review.authorName)}</strong>
+          <span>${review.rating} / 5</span>
+          <p>${escapeHtml(review.text)}</p>
+        </li>`).join("")}</ul>` : ""}
+        <form id="review-form" class="review-form">
+          <h3>Write a review</h3>
+          <label for="review-rating">Rating</label>
+          <select id="review-rating" name="rating" required>
+            <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
+          </select>
+          <label for="review-text">Comments</label>
+          <textarea id="review-text" name="text" rows="3" required></textarea>
+          <button class="btn btn--secondary" type="submit">Submit for moderation</button>
+        </form>`;
+      reviewsMount.querySelector("#review-form")?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.target);
+        try {
+          await createReview({
+            productId: product.id,
+            rating: data.get("rating"),
+            text: data.get("text"),
+          });
+          showToast("Review submitted for moderation");
+          event.target.reset();
+        } catch (error) {
+          showToast(error.message || "Unable to save that review", "error");
+        }
+      });
+    });
+  }
 }

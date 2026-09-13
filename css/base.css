@@ -100,7 +100,8 @@ button {
 :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   border-color: var(--color-focus);
   box-shadow: var(--focus-ring);
-  outline: 2px solid transparent;
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
 }
 
 input,

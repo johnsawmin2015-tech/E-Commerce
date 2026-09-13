@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Sign in to the Morrow administration demonstration.">
+    <title>Admin sign in | Morrow</title>
+    <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/utilities.css">
+    <link rel="stylesheet" href="../css/auth.css">
+  </head>
+  <body class="auth-page" data-page="admin-login">
+    <a class="skip-link" href="#admin-login">Skip to sign in</a>
+    <header class="auth-header">
+      <a class="brand" href="../index.html" aria-label="Morrow home"><span class="brand__name">Morrow</span><span class="brand__tagline">Objects for living</span></a>
+      <a class="auth-back" href="../index.html"><span aria-hidden="true">←</span> Back to store</a>
+    </header>
+    <main class="auth-layout" id="admin-login" tabindex="-1">
+      <section class="auth-story" aria-labelledby="auth-story-title">
+        <p class="eyebrow">Morrow / Operations</p>
+        <h2 id="auth-story-title">A considered space.<br>For everything behind the store.</h2>
+        <p>Manage the collection, care for your customers, and keep everyday operations in order.</p>
+        <ul class="auth-capabilities" role="list">
+          <li><span aria-hidden="true">01</span><div><strong>Curate the collection</strong><p>Products, categories, and inventory.</p></div></li>
+          <li><span aria-hidden="true">02</span><div><strong>Keep orders moving</strong><p>Orders, customers, and reviews.</p></div></li>
+          <li><span aria-hidden="true">03</span><div><strong>See the details</strong><p>Analytics and activity in one place.</p></div></li>
+        </ul>
+        <p class="auth-story__footnote">Objects for living. Tools for the people behind them.</p>
+      </section>
+      <section class="auth-card" aria-labelledby="login-title">
+        <div class="auth-card__mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></div>
+        <p class="eyebrow">Admin portal</p>
+        <h1 id="login-title">Welcome back.</h1>
+        <p class="auth-intro">Sign in with your operations account.</p>
+        <p id="auth-status" class="auth-status" role="status">Preparing sign-in…</p>
+        <form id="admin-login-form" class="auth-form" novalidate aria-labelledby="login-title">
+          <div class="auth-feedback" data-form-feedback role="alert" tabindex="-1" hidden></div>
+          <div class="auth-field">
+            <label for="admin-email">Email address</label>
+            <input type="email" id="admin-email" name="email" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="you@example.com" aria-describedby="admin-email-error" required disabled>
+            <p class="field-error" id="admin-email-error" aria-live="polite" hidden></p>
+          </div>
+          <div class="auth-field">
+            <label for="admin-password">Password</label>
+            <div class="password-field">
+              <input type="password" id="admin-password" name="password" autocomplete="current-password" aria-describedby="admin-password-error" required disabled>
+              <button type="button" class="password-toggle" data-password-toggle aria-controls="admin-password" aria-label="Show password" disabled><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><span data-toggle-label>Show</span></button>
+            </div>
+            <p class="field-error" id="admin-password-error" aria-live="polite" hidden></p>
+          </div>
+          <p class="auth-session-note">Your session stays in this browser tab.</p>
+          <button class="btn btn--primary btn--full" type="submit" disabled>Sign in to admin</button>
+        </form>
+        <details class="auth-help">
+          <summary>Forgot your password or need access?</summary>
+          <p>This demonstration has no email password recovery. For a seeded account, see the <a href="../README.md#demonstration-accounts">local setup guide</a>. Custom accounts have no recovery service; ask the project owner for help. Your saved data will not be reset.</p>
+        </details>
+        <p class="auth-customer">Shopping with us? <a href="../account.html">Customer sign-in</a></p>
+        <div class="auth-demo-note"><strong>Local demonstration</strong><p>Accounts and roles are stored in this browser. This portal is not production authentication.</p></div>
+      </section>
+    </main>
+    <footer class="auth-footer"><p>© 2026 Morrow</p><p>Administration workspace · Browser demonstration</p></footer>
+    <noscript><p class="noscript-message">JavaScript is required to sign in to this local demonstration.</p></noscript>
+    <script type="module" src="../js/pages/admin/login.js"></script>
+  </body>
+</html>

@@ -1,5 +1,8 @@
-import { readSessionStorage, STORAGE_KEYS } from "../storage.js?v=20260829-2";
-import { escapeHtml, formatCurrency, formatDate, safeImage } from "../utils.js?v=20260829-2";
+import { readSessionStorage, STORAGE_KEYS } from "../storage.js";
+import { escapeHtml, formatCurrency, formatDate, safeImage } from "../utils.js";
+import { appReady } from "../core/app.js";
+
+await appReady().catch(() => {});
 
 const FALLBACK_IMAGE = "assets/images/product-placeholder.svg";
 const container = document.querySelector("#order-confirmation");
@@ -73,6 +76,7 @@ if (container && !validOrder) {
           <div><dt>Subtotal</dt><dd>${formatCurrency(order.totals.subtotal)}</dd></div>
           <div><dt>Shipping</dt><dd>${order.totals.shipping === 0 ? "Complimentary" : formatCurrency(order.totals.shipping)}</dd></div>
           ${order.totals.discount ? `<div><dt>Discount</dt><dd>−${formatCurrency(order.totals.discount)}</dd></div>` : ""}
+          ${Number(order.totals.tax) ? `<div><dt>Estimated tax</dt><dd>${formatCurrency(order.totals.tax)}</dd></div>` : ""}
           <div class="summary-card__total"><dt>Total</dt><dd>${formatCurrency(order.totals.total)}</dd></div>
         </dl>
       </section>

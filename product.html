@@ -7,13 +7,13 @@
     <meta name="theme-color" content="#f4f0e8">
     <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
     <title>Product Details | Morrow</title>
-    <link rel="stylesheet" href="./css/tokens.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/reset.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/base.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/layout.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/components.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/utilities.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/responsive.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/tokens.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/reset.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/base.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/layout.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/components.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/utilities.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/responsive.css?v=20260911-4">
   </head>
   <body data-page="product">
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -63,8 +63,22 @@
 
       <section class="section product-section related-section" aria-labelledby="related-title">
         <div class="container">
-          <div class="section-heading"><div><p class="eyebrow">Continue the story</p><h2 id="related-title">You may also like</h2></div><a class="text-link" href="./shop.html">View all products</a></div>
+          <div class="section-heading"><div><p class="eyebrow">Continue the story</p><h2 id="related-title">Similar products</h2></div><a class="text-link" href="./shop.html">View all products</a></div>
           <div class="product-grid" id="related-products" aria-labelledby="related-title" aria-busy="true"><p class="loading-state" role="status">Selecting related pieces…</p></div>
+        </div>
+      </section>
+
+      <section class="section product-section" aria-labelledby="together-title">
+        <div class="container">
+          <div class="section-heading"><div><p class="eyebrow">Pairings</p><h2 id="together-title">Frequently bought together</h2></div></div>
+          <div class="product-grid" id="bought-together" aria-labelledby="together-title"></div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="reviews-title">
+        <div class="container" id="product-reviews">
+          <h2 id="reviews-title">Reviews</h2>
+          <p class="loading-state" role="status">Loading reviews…</p>
         </div>
       </section>
 
@@ -101,7 +115,7 @@
 
     <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true" data-modal-exempt></div>
     <div class="toast-region" id="toast-region"></div>
-    <script type="module" src="./js/app.js?v=20260829-2"></script>
-    <script type="module" src="./js/pages/product.js?v=20260829-2"></script>
+    <script type="module" src="./js/app.js?v=20260911-4"></script>
+    <script type="module" src="./js/pages/product.js?v=20260911-4"></script>
   </body>
 </html>

@@ -3,21 +3,28 @@ import { normalizeSearchTerm, searchProducts } from "./search.js";
 export const DEFAULT_FILTER_STATE = Object.freeze({
   q: "",
   categories: Object.freeze([]),
+  subcategories: Object.freeze([]),
   brands: Object.freeze([]),
+  colors: Object.freeze([]),
+  sizes: Object.freeze([]),
   availability: "all",
+  onSale: false,
   minPrice: "",
   maxPrice: "",
+  minRating: "",
   sort: "featured",
   page: 1,
 });
 
 export const SORT_OPTIONS = Object.freeze([
   "featured",
+  "recommended",
   "newest",
   "price-asc",
   "price-desc",
   "rating",
   "popularity",
+  "best-selling",
   "name",
   "relevance",
 ]);
@@ -26,10 +33,15 @@ const AVAILABILITY_OPTIONS = new Set(["all", "in-stock", "out-of-stock"]);
 const SHOP_PARAM_KEYS = [
   "q",
   "category",
+  "subcategory",
   "brand",
+  "color",
+  "size",
   "availability",
+  "onSale",
   "minPrice",
   "maxPrice",
+  "minRating",
   "sort",
   "page",
 ];
@@ -54,7 +66,8 @@ const normalizeSort = (value) => {
     "price-low-high": "price-asc",
     "price-high": "price-desc",
     "price-high-low": "price-desc",
-    "best-selling": "popularity",
+    "best-selling": "best-selling",
+    "highest-rated": "rating",
     alphabetical: "name",
   };
   const candidate = aliases[value] ?? value;
@@ -70,21 +83,36 @@ const normalizePriceState = (value) => {
 export const normalizeFilterState = (state = {}) => {
   const source = state && typeof state === "object" ? state : {};
 
+  const onSale = source.onSale === true || source.onSale === "true" || source.onSale === "1";
+  const rawRating = source.minRating;
+  const minRating =
+    rawRating === "" || rawRating == null
+      ? ""
+      : String(Math.max(0, Number(rawRating) || 0));
+
   return {
     q: String(source.q ?? source.query ?? "").trim(),
     categories: toStringArray(source.categories ?? source.category ?? []),
+    subcategories: toStringArray(source.subcategories ?? source.subcategory ?? []),
     brands: toStringArray(source.brands ?? source.brand ?? []),
+    colors: toStringArray(source.colors ?? source.color ?? []),
+    sizes: toStringArray(source.sizes ?? source.size ?? []),
     availability: AVAILABILITY_OPTIONS.has(source.availability)
       ? source.availability
       : source.inStock === true
         ? "in-stock"
         : DEFAULT_FILTER_STATE.availability,
+    onSale,
     minPrice: normalizePriceState(source.minPrice),
     maxPrice: normalizePriceState(source.maxPrice),
+    minRating: minRating === "0" && rawRating !== 0 && rawRating !== "0" ? "" : minRating,
     sort: normalizeSort(source.sort),
     page: Math.max(1, Math.trunc(Number(source.page) || 1)),
   };
 };
+
+const optionFacetValue = (value) =>
+  typeof value === "string" ? value : value?.name || value?.label || "";
 
 const normalizedSet = (values) => new Set(values.map(normalizeSearchTerm));
 
@@ -119,6 +147,13 @@ const sortProducts = (products, sort) => {
       (Number(right.reviewCount) || 0) - (Number(left.reviewCount) || 0) ||
       catalogTieBreak(left, right),
     popularity: catalogTieBreak,
+    "best-selling": (left, right) =>
+      Number(Boolean(right.bestSeller)) - Number(Boolean(left.bestSeller)) ||
+      catalogTieBreak(left, right),
+    recommended: (left, right) =>
+      Number(Boolean(right.featured)) - Number(Boolean(left.featured)) ||
+      (Number(right.rating) || 0) - (Number(left.rating) || 0) ||
+      catalogTieBreak(left, right),
     name: (left, right) => compareText(left.name, right.name) || catalogTieBreak(left, right),
   };
 
@@ -136,9 +171,10 @@ export const applyProductPipeline = (products, state = DEFAULT_FILTER_STATE) => 
   const normalizedState = normalizeFilterState(source);
   const categories = normalizedSet(normalizedState.categories);
   const brands = normalizedSet(normalizedState.brands);
-  const colors = normalizedSet(toStringArray(source.colors ?? source.color ?? []));
-  const sizes = normalizedSet(toStringArray(source.sizes ?? source.size ?? []));
-  const minimumRating = Math.max(0, Number(source.minRating) || 0);
+  const subcategories = normalizedSet(normalizedState.subcategories);
+  const colors = normalizedSet(normalizedState.colors);
+  const sizes = normalizedSet(normalizedState.sizes);
+  const minimumRating = Math.max(0, Number(normalizedState.minRating) || 0);
 
   let minimumPrice = normalizedState.minPrice === "" ? null : Number(normalizedState.minPrice);
   let maximumPrice = normalizedState.maxPrice === "" ? null : Number(normalizedState.maxPrice);
@@ -149,13 +185,23 @@ export const applyProductPipeline = (products, state = DEFAULT_FILTER_STATE) => 
   const searched = searchProducts(collection, normalizedState.q);
   const filtered = searched.filter((product) => {
     const price = Number(product?.price);
-    const productColors = (product?.colors ?? []).map(normalizeSearchTerm);
-    const productSizes = (product?.sizes ?? []).map(normalizeSearchTerm);
+    const productColors = (product?.colors ?? [])
+      .map((color) => normalizeSearchTerm(optionFacetValue(color)))
+      .filter(Boolean);
+    const productSizes = (product?.sizes ?? [])
+      .map((size) => normalizeSearchTerm(optionFacetValue(size)))
+      .filter(Boolean);
 
     if (categories.size && !categories.has(normalizeSearchTerm(product?.category))) {
       return false;
     }
+    if (subcategories.size && !subcategories.has(normalizeSearchTerm(product?.subcategory))) {
+      return false;
+    }
     if (brands.size && !brands.has(normalizeSearchTerm(product?.brand))) return false;
+    if (normalizedState.onSale && !(Number(product?.originalPrice) > Number(product?.price))) {
+      return false;
+    }
     if (colors.size && !productColors.some((color) => colors.has(color))) return false;
     if (sizes.size && !productSizes.some((size) => sizes.has(size))) return false;
     if (minimumPrice !== null && price < minimumPrice) return false;
@@ -194,10 +240,15 @@ export const readShopState = (searchParams) => {
   return normalizeFilterState({
     q: query,
     categories: readMany("category"),
+    subcategories: readMany("subcategory"),
     brands: readMany("brand"),
+    colors: readMany("color"),
+    sizes: readMany("size"),
     availability: params.get("availability") ?? "all",
+    onSale: params.get("onSale") === "true",
     minPrice: params.get("minPrice") ?? "",
     maxPrice: params.get("maxPrice") ?? "",
+    minRating: params.get("minRating") ?? "",
     sort: params.get("sort") ?? (query.trim() ? "relevance" : DEFAULT_FILTER_STATE.sort),
     page: params.get("page") ?? 1,
   });
@@ -210,12 +261,17 @@ export const serializeShopState = (state, sourceParams) => {
 
   if (normalizedState.q) params.set("q", normalizedState.q);
   normalizedState.categories.forEach((value) => params.append("category", value));
+  normalizedState.subcategories.forEach((value) => params.append("subcategory", value));
   normalizedState.brands.forEach((value) => params.append("brand", value));
+  normalizedState.colors.forEach((value) => params.append("color", value));
+  normalizedState.sizes.forEach((value) => params.append("size", value));
   if (normalizedState.availability !== DEFAULT_FILTER_STATE.availability) {
     params.set("availability", normalizedState.availability);
   }
+  if (normalizedState.onSale) params.set("onSale", "true");
   if (normalizedState.minPrice !== "") params.set("minPrice", normalizedState.minPrice);
   if (normalizedState.maxPrice !== "") params.set("maxPrice", normalizedState.maxPrice);
+  if (normalizedState.minRating !== "") params.set("minRating", normalizedState.minRating);
   if (normalizedState.sort !== DEFAULT_FILTER_STATE.sort) {
     params.set("sort", normalizedState.sort);
   }

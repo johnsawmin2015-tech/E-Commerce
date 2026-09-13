@@ -18,11 +18,17 @@ import {
   setSiblingsInert,
   uniqueId,
 } from "./utils.js";
+import { getLocalSearchHistory } from "./features/search/searchHistory.js";
+import { getComparison, isCompared, toggleComparison } from "./features/comparison/comparisonService.js";
+import { getSession } from "./services/authService.js";
+import { getAdminDestination } from "./domain/adminRoutes.js";
+import { EVENT_NAMES } from "./core/constants.js";
 
 const FALLBACK_IMAGE = "assets/images/product-placeholder.svg";
 let toastTimer;
 let drawerReturnFocus = null;
 let mobileNavReturnFocus = null;
+let initialized = false;
 
 const syncBodyScrollLock = () => {
   const drawerOpen = Boolean(document.querySelector("#cart-drawer:not([hidden])"));
@@ -59,6 +65,9 @@ export const productCardMarkup = (product, { showQuickAdd = true } = {}) => {
         ${badge ? `<span class="badge product-card__badge">${escapeHtml(badge)}</span>` : ""}
         <button class="icon-btn product-card__wishlist" type="button" data-wishlist-id="${escapeHtml(product.id)}" aria-label="${wished ? "Remove" : "Add"} ${escapeHtml(product.name)} ${wished ? "from" : "to"} wishlist" aria-pressed="${wished}">
           <span aria-hidden="true">${wished ? "♥" : "♡"}</span>
+        </button>
+        <button class="icon-btn product-card__compare" type="button" data-compare-id="${escapeHtml(product.id)}" aria-label="Compare ${escapeHtml(product.name)}" aria-pressed="${isCompared(product.id)}">
+          <span aria-hidden="true">⇄</span>
         </button>
         ${showQuickAdd ? `
           <button class="btn btn--light product-card__quick-add" type="button" data-quick-add="${escapeHtml(product.id)}" ${unavailable ? "disabled" : ""}>
@@ -164,6 +173,11 @@ export const updateHeaderCounts = () => {
       "aria-label",
       `Wishlist, ${wishlistCount} ${wishlistCount === 1 ? "item" : "items"}`,
     );
+  });
+  const comparisonCount = getComparison().length;
+  document.querySelectorAll("[data-compare-count]").forEach((element) => {
+    element.textContent = String(comparisonCount);
+    element.hidden = comparisonCount === 0;
   });
 };
 
@@ -381,7 +395,7 @@ const initMobileNavigation = () => {
     }
   });
 
-  const desktopQuery = window.matchMedia("(min-width: 64rem)");
+  const desktopQuery = window.matchMedia("(min-width: 80rem)");
   const handleDesktopChange = (event) => {
     if (!event.matches || nav.hidden) return;
     const focusWasInNav = nav.contains(document.activeElement);
@@ -402,7 +416,12 @@ const initGlobalSearch = () => {
   const renderSuggestions = debounce(() => {
     const term = input.value.trim();
     if (term.length < 2) {
-      closeSuggestions();
+      const history = getLocalSearchHistory().slice(0, 6);
+      suggestions.innerHTML = history.length
+        ? `<p class="search-suggestions__label">Recent searches</p><ul>${history.map((query) => `
+            <li><a href="shop.html?q=${encodeURIComponent(query)}">${escapeHtml(query)}</a></li>`).join("")}</ul>`
+        : "";
+      suggestions.hidden = !history.length;
       return;
     }
     const matches = getSearchSuggestions(getProducts(), term, 6);
@@ -413,12 +432,20 @@ const initGlobalSearch = () => {
             <span><strong>${escapeHtml(product.name)}</strong><small>${escapeHtml(product.brand)} · ${formatCurrency(product.price)}</small></span>
           </a></li>`).join("")}</ul>
         <a class="search-suggestions__all" href="shop.html?q=${encodeURIComponent(term)}">View all results for “${escapeHtml(term)}”</a>`
-      : `<div class="search-suggestions__empty"><p>No suggestions for “${escapeHtml(term)}”.</p><a href="shop.html?q=${encodeURIComponent(term)}">Search the full shop</a></div>`;
+      : `<div class="search-suggestions__empty"><p>No suggestions for “${escapeHtml(term)}”.</p><p>Try a related brand or category.</p><a href="shop.html?q=${encodeURIComponent(term)}">Search the full shop</a></div>`;
     suggestions.hidden = false;
   });
   input.addEventListener("input", renderSuggestions);
-  input.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeSuggestions();
+  form.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") { closeSuggestions(); input.focus(); }
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    const links = [...suggestions.querySelectorAll("a")];
+    if (!links.length || suggestions.hidden) return;
+    event.preventDefault();
+    const currentIndex = links.indexOf(document.activeElement);
+    const delta = event.key === "ArrowDown" ? 1 : -1;
+    const next = links[currentIndex === -1 ? (delta > 0 ? 0 : links.length - 1) : (currentIndex + delta + links.length) % links.length];
+    next?.focus();
   });
   form.addEventListener("focusout", (event) => {
     if (!form.contains(event.relatedTarget)) closeSuggestions();
@@ -442,7 +469,7 @@ const initNewsletter = () => {
         input?.reportValidity();
         return;
       }
-      showToast("Thanks — you’re on the Morrow list.");
+      showToast("This is a newsletter preview. No subscription or email was sent.");
       form.reset();
     });
   });
@@ -461,6 +488,23 @@ const handleGlobalActions = async (event) => {
       if (icon) icon.textContent = added ? "♥" : "♡";
     });
     showToast(added ? "Saved to your wishlist" : "Removed from your wishlist");
+    return;
+  }
+
+  const compareButton = event.target.closest("[data-compare-id]");
+  if (compareButton) {
+    const product = getProductById(compareButton.dataset.compareId);
+    if (!product) return;
+    if (!isCompared(product.id) && getComparison().length >= 4) {
+      showToast("You can compare up to 4 products", "error");
+      return;
+    }
+    const selected = toggleComparison(product.id);
+    document.querySelectorAll(`[data-compare-id="${CSS.escape(product.id)}"]`).forEach((button) => {
+      button.setAttribute("aria-pressed", String(selected));
+    });
+    showToast(selected ? `${product.name} added to compare` : `${product.name} removed from compare`);
+    updateHeaderCounts();
     return;
   }
 
@@ -520,7 +564,58 @@ const initImageFallbacks = () => {
   }, true);
 };
 
+const enhanceNavigation = () => {
+  const session = getSession();
+  const desktop = document.querySelector(".desktop-nav ul");
+  const mobile = document.querySelector(".mobile-nav ul");
+  const utility = document.querySelector(".utility-nav");
+  const extras = [
+    { href: "./compare.html", label: "Compare", page: "compare" },
+    { href: "./account.html", label: session?.email ? "Account" : "Sign in", page: "account" },
+    { href: "./orders.html", label: "Orders", page: "orders" },
+  ];
+  const adminDestination = getAdminDestination(null, session?.role);
+  if (adminDestination) extras.push({ href: `./admin/${adminDestination}`, label: "Admin", page: "admin" });
+  [desktop, mobile].forEach((list) => {
+    list?.querySelectorAll('[data-dynamic-admin]').forEach((link) => link.closest("li").remove());
+    list?.querySelectorAll('a[href="./account.html"]').forEach((link) => { link.textContent = session ? "Account" : "Sign in"; });
+  });
+  extras.forEach((item) => {
+    if (desktop && !desktop.querySelector(`a[href="${item.href}"]`)) {
+      const li = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = item.href;
+      link.textContent = item.label;
+      link.dataset.navPage = item.page;
+      if (item.page === "admin") link.dataset.dynamicAdmin = "true";
+      li.append(link);
+      desktop.append(li);
+    }
+    if (mobile && !mobile.querySelector(`a[href="${item.href}"]`)) {
+      const li = document.createElement("li");
+      const link = document.createElement("a");
+      link.href = item.href;
+      link.textContent = item.label;
+      if (item.page === "admin") link.dataset.dynamicAdmin = "true";
+      li.append(link);
+      mobile.append(li);
+    }
+  });
+  if (utility && !utility.querySelector("[data-compare-count]")) {
+    const compareLink = document.createElement("a");
+    compareLink.href = "./compare.html";
+    compareLink.setAttribute("aria-label", "Compare products");
+    compareLink.innerHTML = `<span aria-hidden="true">Compare</span><span class="count-badge" data-compare-count hidden>0</span>`;
+    utility.insertBefore(compareLink, utility.firstChild);
+  }
+};
+
 export const initializeGlobalUI = () => {
+  if (initialized) return;
+  initialized = true;
+  enhanceNavigation();
+  window.addEventListener(EVENT_NAMES.AUTH_LOGIN, enhanceNavigation);
+  window.addEventListener(EVENT_NAMES.AUTH_LOGOUT, enhanceNavigation);
   initMobileNavigation();
   initCartDrawer();
   initGlobalSearch();
@@ -532,6 +627,7 @@ export const initializeGlobalUI = () => {
     renderCartDrawer();
   });
   window.addEventListener("ecommerce:wishlist-change", updateHeaderCounts);
+  window.addEventListener("comparison:updated", updateHeaderCounts);
   updateHeaderCounts();
   renderCartDrawer();
 

@@ -6,6 +6,9 @@ import {
   readStorage,
   writeStorage,
 } from "./storage.js";
+import { emit } from "./core/eventBus.js";
+import { EVENT_NAMES } from "./core/constants.js";
+import { patchState } from "./core/state.js";
 
 export const CART_CHANGE_EVENT = "ecommerce:cart-change";
 export const FREE_SHIPPING_THRESHOLD = 150;
@@ -16,15 +19,21 @@ let cartRecords;
 
 const roundCurrency = (value) => Math.round((value + Number.EPSILON) * 100) / 100;
 
+const variantOptionLabel = (value) => {
+  if (value && typeof value === "object") return String(value.name ?? value.label ?? "").trim();
+  return String(value ?? "").trim();
+};
+
 const normalizeVariantText = (value) =>
-  String(value ?? "").trim().toLocaleLowerCase("en-US");
+  variantOptionLabel(value).toLocaleLowerCase("en-US");
 
 const canonicalVariantValue = (value, availableValues) => {
   const normalized = normalizeVariantText(value);
   if (!normalized) return "";
-  return availableValues.find(
+  const match = availableValues.find(
     (availableValue) => normalizeVariantText(availableValue) === normalized,
   );
+  return match == null ? undefined : variantOptionLabel(match);
 };
 
 const normalizeOptions = (product, options) => {
@@ -142,8 +151,12 @@ const hydrateRecord = (record) => {
   const product = getProductById(record.productId);
   if (!product) return null;
 
-  const unitPrice = Number(product.price) || 0;
-  const originalUnitPrice = Number(product.originalPrice) || unitPrice;
+  const variant = (product.variants || []).find((candidate) =>
+    Object.entries(record.options || {}).every(([key, value]) => String(candidate[key] ?? "").toLowerCase() === String(value).toLowerCase()),
+  );
+  if ((product.colors?.length || product.sizes?.length) && !variant) return null;
+  const unitPrice = Number(variant?.priceOverride ?? product.price) || 0;
+  const originalUnitPrice = Number(product.originalPrice ?? product.price) || unitPrice;
   const lineSubtotal = roundCurrency(unitPrice * record.quantity);
   const lineOriginalSubtotal = roundCurrency(originalUnitPrice * record.quantity);
 
@@ -153,7 +166,8 @@ const hydrateRecord = (record) => {
     product,
     name: product.name,
     slug: product.slug,
-    image: product.images[0] ?? "",
+    image: product.images?.[0] ?? "",
+    variant,
     unitPrice,
     originalUnitPrice,
     stock: product.stock,
@@ -200,8 +214,6 @@ export const getCartSummary = () => {
 };
 
 const dispatchCartChange = (reason, itemKey = null) => {
-  if (typeof globalThis.dispatchEvent !== "function") return;
-
   const detail = {
     reason,
     itemKey,
@@ -209,9 +221,16 @@ const dispatchCartChange = (reason, itemKey = null) => {
     summary: getCartSummary(),
   };
 
-  if (typeof globalThis.CustomEvent === "function") {
+  patchState({ cart: detail.cart });
+  if (typeof globalThis.dispatchEvent === "function" && typeof globalThis.CustomEvent === "function") {
     globalThis.dispatchEvent(new globalThis.CustomEvent(CART_CHANGE_EVENT, { detail }));
   }
+  emit(EVENT_NAMES.CART_UPDATED, detail);
+};
+
+export const reloadCartFromStorage = () => {
+  cartRecords = null;
+  return ensureLoaded();
 };
 
 const persist = (reason, itemKey = null) => {
@@ -352,4 +371,5 @@ export default Object.freeze({
   removeCartItem,
   clearCart,
   getCartSummary,
+  reloadCartFromStorage,
 });

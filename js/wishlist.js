@@ -5,6 +5,9 @@ import {
   readStorage,
   writeStorage,
 } from "./storage.js";
+import { emit } from "./core/eventBus.js";
+import { EVENT_NAMES } from "./core/constants.js";
+import { patchState } from "./core/state.js";
 
 export const WISHLIST_CHANGE_EVENT = "ecommerce:wishlist-change";
 
@@ -45,15 +48,9 @@ export const isWishlisted = (id) =>
   ensureLoaded().includes(String(id ?? "").trim());
 
 const dispatchWishlistChange = (reason, productId = null) => {
-  if (
-    typeof globalThis.dispatchEvent !== "function" ||
-    typeof globalThis.CustomEvent !== "function"
-  ) {
-    return;
-  }
-
   const ids = getWishlist();
-  globalThis.dispatchEvent(
+  patchState({ wishlist: ids });
+  if (typeof globalThis.dispatchEvent === "function" && typeof globalThis.CustomEvent === "function") globalThis.dispatchEvent(
     new globalThis.CustomEvent(WISHLIST_CHANGE_EVENT, {
       detail: {
         reason,
@@ -64,6 +61,12 @@ const dispatchWishlistChange = (reason, productId = null) => {
       },
     }),
   );
+  emit(EVENT_NAMES.WISHLIST_UPDATED, { ids, productId, reason });
+};
+
+export const reloadWishlistFromStorage = () => {
+  wishlistIds = null;
+  return ensureLoaded();
 };
 
 const persist = (reason, productId = null) => {
@@ -131,4 +134,5 @@ export default Object.freeze({
   toggleWishlist,
   removeFromWishlist,
   clearWishlist,
+  reloadWishlistFromStorage,
 });

@@ -7,13 +7,13 @@
     <meta name="theme-color" content="#f4f0e8">
     <link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml">
     <title>Demo Checkout | Morrow</title>
-    <link rel="stylesheet" href="./css/tokens.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/reset.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/base.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/layout.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/components.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/utilities.css?v=20260829-2">
-    <link rel="stylesheet" href="./css/responsive.css?v=20260829-2">
+    <link rel="stylesheet" href="./css/tokens.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/reset.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/base.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/layout.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/components.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/utilities.css?v=20260911-4">
+    <link rel="stylesheet" href="./css/responsive.css?v=20260911-4">
   </head>
   <body data-page="checkout">
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -53,9 +53,21 @@
             <p>This frontend does not connect to a payment processor or order server. Never enter real card, banking, or wallet credentials.</p>
           </div>
 
+          <nav class="checkout-stepper" id="checkout-stepper" aria-label="Checkout progress">
+            <ol>
+              <li data-step-key="bag"><a href="./cart.html">Bag</a></li>
+              <li data-step-key="contact" aria-current="step">Contact</li>
+              <li data-step-key="shipping">Shipping</li>
+              <li data-step-key="delivery">Delivery</li>
+              <li data-step-key="payment">Payment</li>
+              <li data-step-key="review">Review</li>
+              <li data-step-key="confirmation">Confirmation</li>
+            </ol>
+          </nav>
+
           <div class="checkout-layout">
             <form class="checkout-form" id="checkout-form" method="post" novalidate>
-              <section class="checkout-form__section" aria-labelledby="contact-heading">
+              <section class="checkout-form__section" data-checkout-step="contact" aria-labelledby="contact-heading">
                 <div class="checkout-form__heading"><span aria-hidden="true">01</span><div><p class="eyebrow">How we can reach you</p><h2 id="contact-heading">Contact information</h2></div></div>
                 <div class="form-grid">
                   <div class="form-field field form-field--full">
@@ -78,7 +90,7 @@
                 </div>
               </section>
 
-              <section class="checkout-form__section" aria-labelledby="shipping-address-heading">
+              <section class="checkout-form__section" data-checkout-step="shipping" aria-labelledby="shipping-address-heading" hidden>
                 <div class="checkout-form__heading"><span aria-hidden="true">02</span><div><p class="eyebrow">Where it would go</p><h2 id="shipping-address-heading">Shipping information</h2></div></div>
                 <div class="form-grid">
                   <div class="form-field field form-field--full">
@@ -118,7 +130,7 @@
                 </div>
               </section>
 
-              <fieldset class="checkout-form__section checkout-options">
+              <fieldset class="checkout-form__section checkout-options" data-checkout-step="delivery" hidden>
                 <legend><span aria-hidden="true">03</span><span><span class="eyebrow">Choose a pace</span> Shipping method</span></legend>
                 <div class="choice-list">
                   <label class="choice-card" for="shipping-standard">
@@ -135,27 +147,41 @@
                 <p class="form-field__error field-error field__error" id="shippingMethod-error" data-error-for="shippingMethod" aria-live="polite" hidden></p>
               </fieldset>
 
-              <fieldset class="checkout-form__section checkout-options">
+              <fieldset class="checkout-form__section checkout-options" data-checkout-step="payment" hidden>
                 <legend><span aria-hidden="true">04</span><span><span class="eyebrow">Safe simulation</span> Payment method</span></legend>
                 <p class="fieldset-intro">Select a demo option. No financial information is requested, processed, or stored.</p>
                 <div class="choice-list">
                   <label class="choice-card" for="payment-card-demo">
-                    <input id="payment-card-demo" name="paymentMethod" type="radio" value="card-demo" checked>
-                    <span class="choice-card__content"><strong>Card payment — Demo</strong><span>No card number or credentials collected</span></span>
+                    <input id="payment-card-demo" name="paymentMethod" type="radio" value="card" checked>
+                    <span class="choice-card__content"><strong>Card — Demo</strong><span>No card number or credentials collected</span></span>
+                  </label>
+                  <label class="choice-card" for="payment-kbzpay">
+                    <input id="payment-kbzpay" name="paymentMethod" type="radio" value="kbzpay">
+                    <span class="choice-card__content"><strong>KBZPay — Demo</strong><span>Simulated wallet confirmation only</span></span>
+                  </label>
+                  <label class="choice-card" for="payment-wavepay">
+                    <input id="payment-wavepay" name="paymentMethod" type="radio" value="wavepay">
+                    <span class="choice-card__content"><strong>WavePay — Demo</strong><span>Simulated wallet confirmation only</span></span>
                   </label>
                   <label class="choice-card" for="payment-cod-demo">
-                    <input id="payment-cod-demo" name="paymentMethod" type="radio" value="cod-demo">
-                    <span class="choice-card__content"><strong>Cash on delivery — Demo</strong><span>Simulated payment at delivery</span></span>
-                  </label>
-                  <label class="choice-card" for="payment-wallet-demo">
-                    <input id="payment-wallet-demo" name="paymentMethod" type="radio" value="wallet-demo">
-                    <span class="choice-card__content"><strong>Digital wallet — Demo</strong><span>No wallet app or account will be opened</span></span>
+                    <input id="payment-cod-demo" name="paymentMethod" type="radio" value="cod">
+                    <span class="choice-card__content"><strong>Cash on Delivery — Demo</strong><span>Simulated payment at delivery</span></span>
                   </label>
                 </div>
                 <p class="form-field__error field-error field__error" id="paymentMethod-error" data-error-for="paymentMethod" aria-live="polite" hidden></p>
               </fieldset>
 
-              <div class="checkout-submit">
+              <section class="checkout-form__section" data-checkout-step="review" aria-labelledby="review-heading" hidden>
+                <div class="checkout-form__heading"><span aria-hidden="true">05</span><div><p class="eyebrow">Confirm before placing</p><h2 id="review-heading">Review your demo order</h2></div></div>
+                <div id="checkout-review-details"></div>
+              </section>
+
+              <div class="checkout-wizard-nav" id="checkout-wizard-nav">
+                <button class="btn btn--secondary" id="checkout-back" type="button">Back</button>
+                <button class="btn btn--primary" id="checkout-next" type="button">Continue</button>
+              </div>
+
+              <div class="checkout-submit" id="checkout-submit" hidden>
                 <p id="checkout-form-status" class="form-status" aria-live="polite"></p>
                 <button class="button btn button--primary btn--primary button--large btn--lg" id="place-order-button" type="submit">Place demo order</button>
                 <p>By continuing, you are creating a browser-only demonstration order. Nothing is transmitted to a real retailer or payment service.</p>
@@ -189,7 +215,7 @@
 
     <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true" data-modal-exempt></div>
     <div class="toast-region" id="toast-region"></div>
-    <script type="module" src="./js/app.js?v=20260829-2"></script>
-    <script type="module" src="./js/pages/checkout-page.js?v=20260829-2"></script>
+    <script type="module" src="./js/app.js?v=20260911-4"></script>
+    <script type="module" src="./js/pages/checkout-page.js?v=20260911-4"></script>
   </body>
 </html>

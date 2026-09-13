@@ -188,7 +188,9 @@
   }
 }
 
-/* 1024px: desktop navigation and multi-column commerce flows. */
+/* 1024px: multi-column commerce flows. The full header stays compact until
+   the 1280px wide-layout breakpoint so dynamic account/admin links cannot
+   collide with the brand, search, or utility actions. */
 @media (min-width: 64rem) {
   .header-shell {
     grid-template-columns: auto minmax(0, 1fr) auto;
@@ -198,13 +200,8 @@
     display: none;
   }
 
-  .desktop-nav {
-    display: flex;
-    justify-content: center;
-  }
-
   /* Legacy header-shell search slot stays collapsed; the live global search
-     remains available whenever the desktop nav is shown. */
+     remains available in both compact and wide header layouts. */
   .header-search {
     display: none;
   }
@@ -355,8 +352,19 @@
 /* Responsive rules for the semantic page templates ----------------------- */
 
 @media (max-width: 29.999rem) {
+  .site-header .brand { font-size: 1.05rem; letter-spacing: .12em; }
+
   .utility-nav a > span:first-child {
     font-size: 0;
+  }
+
+  .utility-nav a[href*="compare"] > span:first-child::before { content: "⇄"; font-size: 1.25rem; }
+  .utility-nav a[href*="wishlist"] > span:first-child::before { content: "♡"; font-size: 1.35rem; }
+  .utility-nav a[href*="cart"] > span:first-child::before { content: "▢"; font-size: 1.2rem; }
+
+  .utility-nav a > span:first-child::before {
+    display: inline-block;
+    line-height: 1;
   }
 
   .shop-toolbar__actions {
@@ -508,18 +516,13 @@
 
 @media (min-width: 64rem) {
   .site-header__inner {
-    grid-template-columns: auto minmax(0, 1fr) minmax(12rem, 18rem) auto;
+    grid-template-columns: var(--tap-target) auto minmax(0, 1fr) auto;
   }
 
   .global-search {
     display: block;
     max-width: 18rem;
     width: 100%;
-  }
-
-  .mobile-menu-button,
-  .mobile-nav {
-    display: none;
   }
 
   .filter-panel {
@@ -553,6 +556,7 @@
 
   .product-card__quick-add {
     opacity: 0;
+    pointer-events: none;
     transform: translateY(var(--space-2));
     transition: opacity var(--duration-fast) var(--ease-standard),
       transform var(--duration-fast) var(--ease-standard);
@@ -561,6 +565,7 @@
   .product-card:hover .product-card__quick-add,
   .product-card:focus-within .product-card__quick-add {
     opacity: 1;
+    pointer-events: auto;
     transform: translateY(0);
   }
 
@@ -577,11 +582,28 @@
 
 @media (min-width: 80rem) {
   .site-header__inner {
-    grid-template-columns: auto minmax(0, 1fr) minmax(14rem, 20rem) auto;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: var(--space-6);
+    padding-block: var(--space-3);
   }
 
-  .global-search {
-    max-width: 20rem;
+  .desktop-nav {
+    display: flex;
+    justify-content: center;
+  }
+
+  .site-header__inner > .global-search {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-width: none;
+  }
+
+  .desktop-nav ul { gap: clamp(var(--space-3), 1.5vw, var(--space-6)); }
+  .desktop-nav a { white-space: nowrap; }
+
+  .mobile-menu-button,
+  .mobile-nav {
+    display: none;
   }
 
   .hero__layout .hero__content {
@@ -596,6 +618,12 @@
 @media (hover: none) {
   .product-card__quick-add {
     opacity: 1;
+    pointer-events: auto;
     transform: none;
   }
+}
+
+@media (min-width: 100rem) {
+  .site-header__inner { max-width: var(--container-wide); grid-template-columns: auto minmax(0, 1fr) minmax(12rem, 16rem) auto; }
+  .site-header__inner > .global-search { grid-column: 3; grid-row: 1; }
 }

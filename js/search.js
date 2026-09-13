@@ -14,12 +14,19 @@ const normalizedFields = (product) => ({
   name: normalizeSearchTerm(product?.name),
   brand: normalizeSearchTerm(product?.brand),
   category: normalizeSearchTerm(product?.category),
+  subcategory: normalizeSearchTerm(product?.subcategory),
+  sku: normalizeSearchTerm(product?.sku),
   description: normalizeSearchTerm(product?.description),
   tags: Array.isArray(product?.tags)
     ? product.tags.map(normalizeSearchTerm).filter(Boolean)
     : [],
 });
 
+/**
+ * Weighted relevance score. Name matches outrank tag-only matches.
+ * Popularity and rating contribute a bounded bonus; they never outrank
+ * a direct name match.
+ */
 const getMatchScore = (product, normalizedTerm) => {
   const fields = normalizedFields(product);
   const tokens = normalizedTerm.split(" ").filter(Boolean);
@@ -27,6 +34,8 @@ const getMatchScore = (product, normalizedTerm) => {
     fields.name,
     fields.brand,
     fields.category,
+    fields.subcategory,
+    fields.sku,
     fields.description,
     ...fields.tags,
   ].join(" ");
@@ -34,26 +43,43 @@ const getMatchScore = (product, normalizedTerm) => {
   if (!tokens.every((token) => haystack.includes(token))) return -1;
 
   let score = 0;
-  if (fields.name === normalizedTerm) score += 140;
-  else if (fields.name.startsWith(normalizedTerm)) score += 100;
-  else if (fields.name.includes(normalizedTerm)) score += 70;
+  if (fields.name === normalizedTerm) score += 100;
+  else if (fields.name.startsWith(normalizedTerm)) score += 80;
+  else if (fields.name.includes(normalizedTerm)) score += 50;
 
-  if (fields.brand === normalizedTerm) score += 65;
+  if (fields.brand === normalizedTerm) score += 30;
   else if (fields.brand.includes(normalizedTerm)) score += 30;
 
-  if (fields.category === normalizedTerm) score += 55;
-  else if (fields.category.includes(normalizedTerm)) score += 22;
+  if (fields.category === normalizedTerm || fields.subcategory === normalizedTerm) score += 20;
+  else if (fields.category.includes(normalizedTerm) || fields.subcategory.includes(normalizedTerm)) {
+    score += 20;
+  }
 
-  if (fields.tags.includes(normalizedTerm)) score += 50;
+  if (fields.tags.includes(normalizedTerm) || fields.tags.some((tag) => tag === normalizedTerm)) {
+    score += 10;
+  }
+
+  if (fields.sku.includes(normalizedTerm)) score += 18;
 
   tokens.forEach((token) => {
     if (fields.name.split(" ").includes(token)) score += 20;
     else if (fields.name.includes(token)) score += 12;
     if (fields.brand.includes(token)) score += 8;
-    if (fields.category.includes(token)) score += 7;
+    if (fields.category.includes(token) || fields.subcategory.includes(token)) score += 7;
     if (fields.tags.some((tag) => tag.includes(token))) score += 6;
     if (fields.description.includes(token)) score += 2;
   });
+
+  // Catalog extensions reuse editorial names with extra edition tokens.
+  // Prefer the compact original title over "Name — Edition 9" copies.
+  const extraNameTokens = Math.max(0, fields.name.split(" ").filter(Boolean).length - tokens.length);
+  score -= Math.min(18, extraNameTokens);
+  if (!(product?.tags || []).map((tag) => String(tag).toLowerCase()).includes("extended-catalog")) {
+    score += 20;
+  }
+
+  score += Math.min(15, (Number(product?.popularity) || 0) * 0.12);
+  score += Math.min(10, (Number(product?.rating) || 0) * 1.5);
 
   return score;
 };

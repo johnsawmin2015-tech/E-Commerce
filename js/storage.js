@@ -15,6 +15,10 @@ export const STORAGE_KEYS = Object.freeze({
   RECENTLY_VIEWED: "recently-viewed",
   LAST_ORDER: "last-order",
   CHECKOUT_DRAFT: "checkout-draft",
+  SESSION: "session",
+  COMPARISON: "comparison",
+  SEARCH_HISTORY: "search-history",
+  UI_PREFS: "ui-prefs",
 });
 
 const memoryStore = new Map();
@@ -188,7 +192,8 @@ export const readSessionStorage = (key, fallback = null, guard = inferGuard(fall
 export const writeSessionStorage = (key, value, guard = () => true) => {
   if (!guard(value)) return false;
   try {
-    globalThis.sessionStorage?.setItem(getStorageKey(key), JSON.stringify({
+    if (!globalThis.sessionStorage) return false;
+    globalThis.sessionStorage.setItem(getStorageKey(key), JSON.stringify({
       version: STORAGE_SCHEMA_VERSION,
       value,
     }));

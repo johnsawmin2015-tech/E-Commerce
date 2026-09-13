@@ -64,10 +64,15 @@ test("shop URL state round-trips multiple facets", () => {
   const state = {
     q: "linen",
     categories: ["Apparel", "Home"],
+    subcategories: [],
     brands: ["Still House"],
+    colors: [],
+    sizes: [],
     availability: "in-stock",
+    onSale: false,
     minPrice: "50",
     maxPrice: "200",
+    minRating: "",
     sort: "rating",
     page: 2,
   };
@@ -164,4 +169,21 @@ test("order totals share promotion and shipping rules", () => {
   assert.equal(totals.shipping, 0);
   assert.equal(totals.discount, Math.round(totals.subtotal * 0.1 * 100) / 100);
   assert.equal(totals.total, totals.subtotal - totals.discount);
+});
+
+test("color filters match object-shaped color records", () => {
+  const products = [{
+    id: "color-object",
+    name: "Ink Tee",
+    brand: "Morrow",
+    category: "Apparel",
+    price: 40,
+    stock: 4,
+    rating: 4.5,
+    colors: [{ name: "Ink", hex: "#252525" }],
+    sizes: ["M"],
+  }];
+  const matched = filters.applyProductPipeline(products, { colors: ["Ink"] });
+  assert.equal(matched.length, 1);
+  assert.equal(matched[0].id, "color-object");
 });

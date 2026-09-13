@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Morrow browser tests</title>
+    <link rel="icon" href="../assets/icons/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/tokens.css">
+    <link rel="stylesheet" href="../css/base.css">
+  </head>
+  <body>
+    <main class="container">
+      <h1>Morrow domain tests</h1>
+      <p>These checks exercise pricing, coupons, inventory, orders, search, RBAC, analytics boundaries, and catalog scale in the browser.</p>
+      <div id="results"><p>Running…</p></div>
+    </main>
+    <script type="module">
+      import { test, assertEqual, assertOk, renderResults } from "./testRunner.js";
+      import { calculatePricing } from "../js/services/pricingService.js";
+      import { validateCoupon, calculateCouponDiscount } from "../js/services/couponService.js?v=20260912-1";
+      import { applyReservation, availableStock, completeSale } from "../js/domain/inventory.js";
+      import { canTransition } from "../js/domain/orderMachine.js";
+      import { ORDER_STATUS, ROLES, PERMISSIONS, COUPON_TYPE, ANALYTICS_EVENTS } from "../js/core/constants.js";
+      import { hasPermission } from "../js/domain/rbac.js";
+      import { searchProducts } from "../js/search.js";
+      import { generateExtendedCatalog } from "../js/data/catalogGenerator.js";
+      import { averageOrderValue, sumPurchaseRevenue, conversionRate } from "../js/domain/analytics.js";
+
+      await test("pricing total", () => {
+        const priced = calculatePricing({ items: [{ unitPrice: 100, quantity: 1 }], discount: 10, includeTax: false });
+        assertEqual(priced.total, 102);
+      });
+      await test("shipping and tax", () => {
+        const priced = calculatePricing({ items: [{ unitPrice: 40, quantity: 1 }], shippingMethod: "standard", taxRate: 0.08 });
+        assertEqual(priced.shipping, 12);
+        assertEqual(priced.tax, 3.2);
+        assertEqual(priced.total, 55.2);
+      });
+      await test("coupon expired", () => {
+        const result = validateCoupon({ code: "X", type: COUPON_TYPE.PERCENTAGE, value: 10, active: true, expiresAt: "2020-01-01" }, { subtotal: 80 });
+        assertEqual(result.ok, false);
+      });
+      await test("coupon unlimited and restriction", () => {
+        const coupon = { code: "HOME", type: COUPON_TYPE.PERCENTAGE, value: 10, active: true, usageLimit: null, usageCount: 400, categories: ["Home"] };
+        assertOk(validateCoupon(coupon, { subtotal: 100, items: [{ category: "Home", lineSubtotal: 60, quantity: 1 }] }).ok);
+        assertEqual(calculateCouponDiscount(coupon, 100, [{ category: "Home", lineSubtotal: 60, quantity: 1 }]), 6);
+      });
+      await test("inventory reservation", () => {
+        assertOk(applyReservation({ onHand: 2, reserved: 0 }, 2).ok);
+        assertEqual(availableStock({ onHand: 5, reserved: 1 }), 4);
+      });
+      await test("inventory rejects invalid sale", () => {
+        assertEqual(applyReservation({ onHand: 2, reserved: 0 }, 0).ok, false);
+        assertEqual(completeSale({ onHand: 2, reserved: 1 }, 2).onHand, 2);
+      });
+      await test("order transition", () => {
+        assertOk(canTransition(ORDER_STATUS.PENDING, ORDER_STATUS.CANCELLED));
+        assertEqual(canTransition(ORDER_STATUS.CANCELLED, ORDER_STATUS.CANCELLED), false);
+      });
+      await test("rbac deny", () => {
+        assertEqual(hasPermission(ROLES.CUSTOMER, PERMISSIONS.AUDIT_READ), false);
+      });
+      await test("search name rank", () => {
+        const ranked = searchProducts([
+          { id: "1", name: "Cedar Candle", tags: ["gift"], popularity: 10, rating: 4 },
+          { id: "2", name: "Throw", tags: ["cedar"], popularity: 90, rating: 5 },
+        ], "cedar");
+        assertEqual(ranked[0].id, "1");
+      });
+      await test("aov", () => {
+        assertEqual(averageOrderValue(200, 4), 50);
+      });
+      await test("analytics revenue is not double-counted", () => {
+        assertEqual(sumPurchaseRevenue([{ type: ANALYTICS_EVENTS.PURCHASE, metadata: { total: 100 } }, { type: ANALYTICS_EVENTS.CHECKOUT_COMPLETED, metadata: { total: 100 } }]), 100);
+        assertEqual(conversionRate(3, 2), 1);
+      });
+      await test("catalog size", () => {
+        assertOk(generateExtendedCatalog().length >= 1000);
+      });
+      renderResults(document.querySelector("#results"));
+    </script>
+  </body>
+</html>

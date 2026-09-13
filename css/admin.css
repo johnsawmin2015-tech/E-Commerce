@@ -1,0 +1,336 @@
+/* Morrow operations UI. Shared colors, spacing and type come from tokens.css. */
+
+/* Layout and surfaces */
+.admin-shell {
+  display: grid;
+  grid-template-columns: minmax(14rem, 18rem) minmax(0, 1fr);
+  min-height: 100dvh;
+}
+.admin-sidebar {
+  background: var(--color-surface-inverse);
+  color: var(--color-text-inverse);
+  padding: var(--space-5);
+}
+.admin-sidebar a {
+  color: inherit;
+  display: block;
+  padding-block: var(--space-2);
+}
+.admin-main {
+  background: var(--color-canvas);
+}
+.kpi-grid {
+  display: grid;
+  gap: var(--space-4);
+  margin-block: var(--space-5);
+}
+.kpi-card,
+.admin-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+}
+.demo-banner {
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-5);
+  font-size: var(--font-size-sm);
+}
+
+/* Tables and forms */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.admin-table th,
+.admin-table td {
+  border-bottom: 1px solid var(--color-border);
+  text-align: start;
+  vertical-align: top;
+}
+.admin-form {
+  display: grid;
+  max-width: 40rem;
+}
+.admin-form :where(input, select, textarea) {
+  width: 100%;
+}
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-block: var(--space-4) var(--space-6);
+}
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+/* Analytics */
+.bar-chart {
+  display: grid;
+  gap: var(--space-2);
+}
+.bar-chart__row {
+  display: grid;
+  gap: var(--space-3);
+  align-items: center;
+}
+.bar-chart__track {
+  background: var(--color-canvas-subtle);
+  height: 0.55rem;
+  border-radius: var(--radius-pill);
+}
+.bar-chart__fill {
+  background: var(--color-accent);
+  height: 100%;
+  border-radius: inherit;
+}
+
+/* Access states and operations controls. Tables own horizontal scrolling. */
+body[data-admin-pending] .admin-shell {
+  display: none;
+}
+.admin-access-loading {
+  display: none;
+}
+body[data-admin-pending] .admin-access-loading {
+  display: block;
+  padding: var(--space-8);
+  text-align: center;
+}
+.admin-access-message {
+  display: grid;
+  gap: var(--space-6);
+  max-width: 46rem;
+  margin: var(--space-16) auto;
+  padding: var(--space-6);
+}
+.admin-main,
+.admin-sidebar,
+#admin-content {
+  min-width: 0;
+}
+.admin-main {
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+.admin-main h1 {
+  font-size: var(--font-size-3xl);
+  margin-bottom: var(--space-6);
+}
+.admin-main h2 {
+  font-size: var(--font-size-2xl);
+  margin-block: var(--space-2) var(--space-4);
+}
+.admin-main #admin-content > * + * {
+  margin-top: var(--space-5);
+}
+.admin-sidebar {
+  overflow-wrap: anywhere;
+}
+.admin-sidebar .brand {
+  padding-block: var(--space-3);
+}
+.admin-sidebar__label {
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+.admin-sidebar__identity {
+  border-block: 1px solid rgb(255 255 255 / 20%);
+  font-size: var(--font-size-sm);
+  padding-block: var(--space-4);
+  margin-block: var(--space-5);
+}
+.admin-sidebar__identity span {
+  color: var(--neutral-300);
+  text-transform: capitalize;
+}
+.admin-sidebar nav {
+  display: grid;
+  gap: var(--space-1);
+}
+.admin-sidebar nav a {
+  border-radius: var(--radius-md);
+  min-height: var(--tap-target);
+  padding: var(--space-3);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+}
+.admin-sidebar nav a:hover {
+  background: rgb(255 255 255 / 8%);
+}
+.admin-sidebar nav a[aria-current="page"] {
+  background: var(--color-canvas-subtle);
+  color: var(--color-text);
+}
+.admin-sidebar__footer {
+  border-top: 1px solid rgb(255 255 255 / 20%);
+  margin-top: var(--space-6);
+  padding-top: var(--space-3);
+  font-size: var(--font-size-sm);
+}
+.admin-sidebar__footer a,
+#admin-logout {
+  min-height: var(--tap-target);
+  display: flex;
+  align-items: center;
+}
+#admin-logout {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.admin-navigation summary {
+  display: none;
+  min-height: var(--tap-target);
+  align-items: center;
+  justify-content: space-between;
+}
+.admin-table-wrap {
+  position: relative;
+  display: block;
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.admin-table {
+  min-width: 38rem;
+  font-size: var(--font-size-sm);
+}
+.admin-table th {
+  background: var(--color-canvas-subtle);
+  font-weight: var(--font-weight-semibold);
+}
+.admin-table td,
+.admin-table th {
+  padding: var(--space-3);
+  overflow-wrap: anywhere;
+}
+.admin-table tbody tr:hover {
+  background: var(--color-canvas-subtle);
+}
+.admin-main :where(input:not([type="hidden"]), select, textarea) {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  min-height: var(--tap-target);
+  min-width: 0;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-3);
+}
+.admin-main label {
+  display: grid;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+}
+.admin-main :where(button:not(.btn)) {
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-3);
+  margin-block: var(--space-1);
+}
+.admin-main :where(button:not(.btn)):hover {
+  background: var(--color-canvas-subtle);
+}
+.admin-main button:disabled {
+  opacity: 0.5;
+}
+.admin-form {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  gap: var(--space-4);
+}
+.admin-table form {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.admin-table input[type="number"] {
+  width: 6rem;
+}
+.admin-table select {
+  min-width: 10rem;
+}
+.admin-toolbar {
+  align-items: end;
+}
+.admin-toolbar label {
+  flex: 1 1 12rem;
+}
+.admin-pagination {
+  flex-wrap: wrap;
+  font-size: var(--font-size-sm);
+}
+.admin-pagination span {
+  flex: 1;
+  min-width: 7rem;
+  text-align: center;
+}
+.kpi-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+.kpi-card strong {
+  font-size: var(--font-size-2xl);
+}
+.kpi-card p {
+  color: var(--color-text-secondary);
+}
+.bar-chart__row {
+  grid-template-columns: minmax(0, 8rem) minmax(2rem, 1fr) auto;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 64.001rem) {
+  .admin-sidebar {
+    align-self: start;
+    position: sticky;
+    top: 0;
+    max-height: 100dvh;
+    overflow-y: auto;
+  }
+}
+@media (max-width: 64rem) {
+  .admin-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-sidebar {
+    padding: var(--space-4) var(--space-5);
+  }
+  .admin-sidebar__identity {
+    margin-block: var(--space-3);
+    padding-block: var(--space-3);
+  }
+  .admin-navigation summary {
+    display: flex;
+  }
+  .admin-navigation summary::after {
+    content: "+";
+  }
+  .admin-navigation[open] summary::after {
+    content: "−";
+  }
+  .admin-navigation nav {
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    padding-top: var(--space-2);
+  }
+  .admin-sidebar__footer {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: var(--space-5);
+    margin-top: var(--space-3);
+    padding-top: var(--space-2);
+  }
+}
